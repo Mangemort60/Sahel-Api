@@ -1,7 +1,7 @@
 const { getRateDetails } = require('../../services/quoteService')
 
 const calculateQuote = async (req, res) => {
-    const { sizeRange, numberOfFloors } = req.body;
+    const { sizeRange, numberOfFloors, fruitBasketSelected } = req.body;
   
     try {
       const rateDetails = await getRateDetails(sizeRange);
@@ -11,8 +11,12 @@ const calculateQuote = async (req, res) => {
       }
   
       // Calculer le prix total en fonction du nombre d'étages
-      const totalPrice = rateDetails.salePricePerFloor +
+      let totalPrice = rateDetails.salePricePerFloor +
                          ((rateDetails.marginEuro + rateDetails.variableCost) * numberOfFloors );
+
+      if (fruitBasketSelected) {
+      totalPrice += rateDetails.fruitBasketPrice; // Ajoute 15 € au prix total
+      }
   
       return res.json({ totalPrice });
     } catch (error) {

@@ -44,23 +44,26 @@ const createReservation = async (req, res) => {
     }
   };
 
-
-const getReservedDates = async (req, res) => {
-  try {
-    const reservationsSnapshot = await db.collection('reservations').get();
-    const reservedDates = [];
-    reservationsSnapshot.forEach(doc => {
+  const getReservedDates = async (req, res) => {
+    try {
+      const reservationsSnapshot = await db.collection('reservations').get();
+      const reservedDates = [];
+      reservationsSnapshot.forEach(doc => {
         const reservationData = doc.data();
-        // Convertir l'objet Timestamp en objet Date, puis en chaîne ISO
-        const serviceDate = reservationData.serviceDate.toDate().toISOString().split('T')[0];
+        // Assurez-vous que la date est traitée en UTC pour éviter les problèmes de fuseau horaire
+        // Conversion de l'objet Timestamp Firestore en objet Date, puis formatage en chaîne ISO
+        const serviceDateUTC = reservationData.serviceDate.toDate().toISOString();
+        // Convertit la date en UTC et extrait seulement la partie date pour uniformiser le format
+        const serviceDate = new Date(serviceDateUTC).toISOString().split('T')[0];
         reservedDates.push(serviceDate);
       });
-    res.status(200).json(reservedDates);
-  } catch (error) {
-    console.error("Error fetching reserved dates: ", error);
-    res.status(500).json({ message: "Failed to fetch reserved dates" });
-  }
-};
+      res.status(200).json(reservedDates);
+    } catch (error) {
+      console.error("Error fetching reserved dates: ", error);
+      res.status(500).json({ message: "Failed to fetch reserved dates" });
+    }
+  };
+  
 
 
 module.exports = {

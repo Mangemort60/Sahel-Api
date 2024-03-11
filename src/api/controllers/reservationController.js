@@ -1,9 +1,15 @@
 const { db } = require('../../config/firebaseConfig'); // Assurez-vous que ce chemin correspond à votre configuration Firebase
+const reservationSchema = require('../../models/reservationModel')
 
 // Fonction pour créer une nouvelle réservation
 const createReservation = async (req, res) => {
-    const { areaSize, fruitsBasketSelected, nbrOfStageToClean, serviceDate, clientId } = req.body;
-  
+  const { areaSize, fruitsBasketSelected, nbrOfStageToClean, serviceDate, clientId, address, addressComplement, phoneNumber, specialInstructions, shortId } = req.body;
+   
+    // Valider les données reçues
+    const { error, value } = reservationSchema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: 'Validation error', details: error.details });
+    }
     const requestedDate = new Date(new Date(serviceDate).setHours(0, 0, 0, 0)); // Réinitialise l'heure pour la date demandée à minuit
     const today = new Date(new Date().setHours(0, 0, 0, 0));
   
@@ -12,6 +18,7 @@ const createReservation = async (req, res) => {
     expirationDate.setMinutes(expirationDate.getMinutes() + 30);
   
     try {
+      
       // Vérifier si la date de service demandée est dans le passé ou aujourd'hui
       if (requestedDate <= today) {
         return res.status(400).json({ message: 'The service date cannot be in the past or today.' });
@@ -21,8 +28,8 @@ const createReservation = async (req, res) => {
       const reservationsRef = db.collection('reservations');
       const querySnapshot = await reservationsRef.where('serviceDate', '==', requestedDate).get();
   
-      if (!querySnapshot.empty) {
-        return res.status(400).json({ message: 'This service date is already booked.' });
+      if (querySnapshot.size >= 3) {
+        return res.status(400).json({ message: 'This service date has reached the booking limit.' });
       }
   
       // Création du document de réservation dans Firestore
@@ -31,11 +38,16 @@ const createReservation = async (req, res) => {
         fruitsBasketSelected,
         nbrOfStageToClean,
         expirationDate,
-        serviceDate: requestedDate, // Utilisation de requestedDate qui est déjà un objet Date
+        serviceDate: requestedDate,
         clientId,
+        address, // Assurez-vous d'ajouter ces champs à votre base de données
+        addressComplement,
+        phoneNumber,
+        specialInstructions,
         status: "pending",
-        createdAt: new Date() // Date de création de la réservation
-      });
+        createdAt: new Date(),
+        shortId: shortId
+    });
   
       res.status(201).json({ message: 'Reservation created successfully with expiration', reservationId: reservationRef.id, validUntil: expirationDate });
     } catch (error) {
@@ -47,20 +59,27 @@ const createReservation = async (req, res) => {
   const getReservedDates = async (req, res) => {
     try {
       const reservationsSnapshot = await db.collection('reservations').get();
-      const reservedDates = [];
+      const reservationCounts = {};
+  
       reservationsSnapshot.forEach(doc => {
-        const reservationData = doc.data();
-        // Assurez-vous que la date est traitée en UTC pour éviter les problèmes de fuseau horaire
-        // Conversion de l'objet Timestamp Firestore en objet Date, puis formatage en chaîne ISO
-        const serviceDateUTC = reservationData.serviceDate.toDate().toISOString();
-        // Convertit la date en UTC et extrait seulement la partie date pour uniformiser le format
-        const serviceDate = new Date(serviceDateUTC).toISOString().split('T')[0];
-        reservedDates.push(serviceDate);
+        const { serviceDate } = doc.data();
+        const dateStr = serviceDate.toDate().toISOString().split('T')[0];
+        if (reservationCounts[dateStr]) {
+          reservationCounts[dateStr] += 1;
+        } else {
+          reservationCounts[dateStr] = 1;
+        }
       });
-      res.status(200).json(reservedDates);
+  
+      const countsAsArray = Object.entries(reservationCounts).map(([date, count]) => ({
+        date,
+        count
+      }));
+  
+      res.status(200).json(countsAsArray);
     } catch (error) {
-      console.error("Error fetching reserved dates: ", error);
-      res.status(500).json({ message: "Failed to fetch reserved dates" });
+      console.error("Error fetching reservation counts: ", error);
+      res.status(500).json({ message: "Failed to fetch reservation counts" });
     }
   };
   

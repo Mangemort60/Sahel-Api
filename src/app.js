@@ -22,6 +22,7 @@ app.use('/', quoteRoutes)
 app.use('/', reservationRoutes)
 app.use('/', cleanUpRoutes)
 app.use('/', paymentRoutes)
+app.use('/auth', authRoutes)
 
 
 module.exports = app

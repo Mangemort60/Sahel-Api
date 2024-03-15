@@ -46,7 +46,35 @@ const registerUser = async (req, res) => {
 };
 
 
+// Fonction pour authentifier l'utilisateur
+const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).send({ message: 'Email and password are required.' });
+    }
+
+    try {
+        // Connectez-vous avec Firebase Auth côté client et obtenez le token ID dans la réponse
+        // Cet exemple suppose que le token ID est envoyé au serveur après connexion côté client
+        const idToken = req.body.idToken; // Le token ID obtenu après la connexion côté client
+
+        // Vérifiez le token ID avec Firebase Admin SDK
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        const uid = decodedToken.uid;
+
+        // Récupérez les informations supplémentaires de l'utilisateur si nécessaire
+        const userRecord = await admin.auth().getUser(uid);
+
+        // Répondez avec les informations de l'utilisateur ou un token personnalisé si nécessaire
+        res.status(200).send({ message: 'User logged in successfully', uid, email: userRecord.email });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(401).send({ message: 'Login failed', error: error.message });
+    }
+};
+
 
 module.exports = {
-    registerUser
+    registerUser, loginUser
 };

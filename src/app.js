@@ -4,7 +4,6 @@ const cors = require('cors');
 const app = express();
 const authRoutes = require('./api/routes/authRoutes');
 const quoteRoutes = require('./api/routes/quoteRoutes');
-const cleanUpRoutes = require('./api/routes/cleanUpRoutes')
 const paymentRoutes = require('./api/routes/paymentRoutes')
 const reservationRoutes = require('./api/routes/reservationRoutes')
 
@@ -20,7 +19,6 @@ app.get('/', (req, res) => {
 app.use('/auth', authRoutes)
 app.use('/', quoteRoutes)
 app.use('/', reservationRoutes)
-app.use('/', cleanUpRoutes)
 app.use('/', paymentRoutes)
 app.use('/auth', authRoutes)
 

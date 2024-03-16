@@ -1,16 +1,22 @@
 const Joi = require('joi');
 
 const reservationSchema = Joi.object({
-  areaSize: Joi.number().required(),
-  fruitsBasketSelected: Joi.boolean().required(),
-  nbrOfStageToClean: Joi.number().required(),
-  serviceDate: Joi.date().greater('now').required(),
-  clientId: Joi.string().required(),
-  address: Joi.string().required(),
-  addressComplement: Joi.string().allow('', null),
-  phoneNumber: Joi.string().pattern(new RegExp('^\\d{10}$')), // Adaptez selon le format de numéro souhaité
-  specialInstructions: Joi.string().allow('', null).max(250),
-  shortId: Joi.string().required()
+  formData: Joi.object({
+    numberOfFloors: Joi.string().required(),
+    sizeRange: Joi.string().required(),
+    fruitBasketSelected: Joi.boolean().required(),
+    beforeOrAfter: Joi.string().required(),
+  }).required(),
+  bookingFormData: Joi.object({
+    country: Joi.string().required(),
+    city: Joi.string().required(),
+    address: Joi.string().required(),
+    address2: Joi.string().allow(''), // Permet les chaînes vides
+    specialInstructions: Joi.string().allow(''),
+    phone: Joi.string().pattern(/^[0-9]+$/).required(), // Assure que le téléphone ne contient que des chiffres
+  }).required(),
+  quote: Joi.number().required(),
+  serviceDate: Joi.date().required(),
 });
 
-module.exports = reservationSchema;
+module.exports = reservationSchema

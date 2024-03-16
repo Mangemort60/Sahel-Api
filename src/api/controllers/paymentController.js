@@ -20,3 +20,21 @@ exports.createPayment = async (req, res) => {
         res.status(500).json({ error: error.message });
       }
 };
+
+
+exports.verifyPayment = async (req, res) => {
+
+  const paymentIntentId = req.query.payment_intent;
+  
+  try {
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+    if (paymentIntent.status === 'succeeded') {
+      res.json({ success: true, message: 'Payment succeeded' });
+    } else {
+      res.json({ success: false, message: 'Payment not succeeded', status: paymentIntent.status });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
+  }
+}

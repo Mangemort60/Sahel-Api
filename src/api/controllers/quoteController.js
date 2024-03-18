@@ -11,8 +11,9 @@ const calculateQuote = async (req, res) => {
       }
   
       // Calculer le prix total en fonction du nombre d'étages
-      let totalPrice = rateDetails.salePricePerFloor +
-                         ((rateDetails.marginEuro + rateDetails.variableCost) * numberOfFloors );
+
+      let totalPrice = Math.ceil((numberOfFloors * rateDetails.variableCost) + rateDetails.logisticCost + rateDetails.marginEuro * 1.20);
+
 
       if (fruitBasketSelected) {
       totalPrice += rateDetails.fruitBasketPrice; // Ajoute 15 € au prix total

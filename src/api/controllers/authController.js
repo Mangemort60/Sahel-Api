@@ -45,35 +45,33 @@ const registerUser = async (req, res) => {
     }
 };
 
-
-// Fonction pour authentifier l'utilisateur
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-        return res.status(400).send({ message: 'Email and password are required.' });
-    }
-
     try {
-        // Connectez-vous avec Firebase Auth côté client et obtenez le token ID dans la réponse
-        // Cet exemple suppose que le token ID est envoyé au serveur après connexion côté client
-        const idToken = req.body.idToken; // Le token ID obtenu après la connexion côté client
+        // Authentifier l'utilisateur avec Firebase Auth
+        const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+        const userId = userCredential.user.uid;
 
-        // Vérifiez le token ID avec Firebase Admin SDK
-        const decodedToken = await admin.auth().verifyIdToken(idToken);
-        const uid = decodedToken.uid;
+        // Récupérer les données supplémentaires de l'utilisateur depuis Firestore
+        const userDoc = await db.collection('users').doc(userId).get();
+        
+        if (!userDoc.exists) {
+            return res.status(404).json({ error: 'User data not found in Firestore.' });
+        }
 
-        // Récupérez les informations supplémentaires de l'utilisateur si nécessaire
-        const userRecord = await admin.auth().getUser(uid);
+        const userData = userDoc.data();
 
-        // Répondez avec les informations de l'utilisateur ou un token personnalisé si nécessaire
-        res.status(200).send({ message: 'User logged in successfully', uid, email: userRecord.email });
+        // Extraire les champs requis
+        const { name, firstName, shortId } = userData;
+
+        // Renvoyer les données de l'utilisateur au client
+        res.status(200).json({ message: 'Login successful', userId, name, firstName, shortId });
     } catch (error) {
-        console.error('Login error:', error);
-        res.status(401).send({ message: 'Login failed', error: error.message });
+        console.error(error);
+        res.status(401).json({ error: 'Login failed. ' + error.message });
     }
 };
-
 
 module.exports = {
     registerUser, loginUser

@@ -45,34 +45,36 @@ const registerUser = async (req, res) => {
     }
 };
 
-const loginUser = async (req, res) => {
-    const { email, password } = req.body;
+const getUserDataAndVerifyToken = async (req, res) => {
+    // Extrait le token d'authentification Firebase du header d'autorisation
+    const token = req.headers.authorization?.split('Bearer ')[1];
+
+    if (!token) {
+        return res.status(401).json({ error: 'Aucun token fourni.' });
+    }
 
     try {
-        // Authentifier l'utilisateur avec Firebase Auth
-        const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-        const userId = userCredential.user.uid;
+        // Vérifie le token d'authentification avec Firebase Admin
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const userId = decodedToken.uid;
 
-        // Récupérer les données supplémentaires de l'utilisateur depuis Firestore
+        // Récupère les données utilisateur de Firestore
         const userDoc = await db.collection('users').doc(userId).get();
-        
+
         if (!userDoc.exists) {
-            return res.status(404).json({ error: 'User data not found in Firestore.' });
+            return res.status(404).json({ error: 'Données utilisateur introuvables.' });
         }
 
         const userData = userDoc.data();
 
-        // Extraire les champs requis
-        const { name, firstName, shortId } = userData;
-
-        // Renvoyer les données de l'utilisateur au client
-        res.status(200).json({ message: 'Login successful', userId, name, firstName, shortId });
+        // Renvoie les données de l'utilisateur au client
+        res.status(200).json({ userId, ...userData });
     } catch (error) {
         console.error(error);
-        res.status(401).json({ error: 'Login failed. ' + error.message });
+        res.status(401).json({ error: 'Échec de l’authentification.' });
     }
 };
 
 module.exports = {
-    registerUser, loginUser
+    registerUser, getUserDataAndVerifyToken
 };

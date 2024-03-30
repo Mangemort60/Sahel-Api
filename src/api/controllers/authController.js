@@ -34,6 +34,7 @@ const registerUser = async (req, res) => {
         await db.collection('users').doc(userRecord.uid).set({
             name,
             firstName,
+            email,
             roles: ["client"],
             shortId, // Stocke le shortId généré
         });

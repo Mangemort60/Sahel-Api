@@ -45,7 +45,7 @@ const registerUser = async (req, res) => {
     }
 };
 
-const getUserDataAndVerifyToken = async (req, res) => {
+const getUserDataAndVerifyToken = async (req, res, next) => {
     // Extrait le token d'authentification Firebase du header d'autorisation
     const token = req.headers.authorization?.split('Bearer ')[1];
 
@@ -65,10 +65,11 @@ const getUserDataAndVerifyToken = async (req, res) => {
             return res.status(404).json({ error: 'Données utilisateur introuvables.' });
         }
 
-        const userData = userDoc.data();
 
-        // Renvoie les données de l'utilisateur au client
-        res.status(200).json({ userId, ...userData });
+        req.user = { userId, ...userDoc.data() };
+        console.log("REQ USER" , req.user);
+        next(); // Passez au middleware/routeur suivant
+
     } catch (error) {
         console.error(error);
         res.status(401).json({ error: 'Échec de l’authentification.' });

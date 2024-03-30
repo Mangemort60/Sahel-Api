@@ -5,7 +5,7 @@ const app = express();
 const authRoutes = require('./api/routes/authRoutes');
 const quoteRoutes = require('./api/routes/quoteRoutes');
 const paymentRoutes = require('./api/routes/paymentRoutes')
-const reservationRoutes = require('./api/routes/reservationRoutes')
+const reservationRoutes = require('./api/routes/reservationRoutes');
 
 app.use(express.json());
 app.use(cors());

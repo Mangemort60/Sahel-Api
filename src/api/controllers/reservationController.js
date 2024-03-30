@@ -1,7 +1,7 @@
 const { db } = require('../../config/firebaseConfig'); // Assurez-vous que ce chemin correspond à votre configuration Firebase
 const reservationSchema = require('../../models/reservationModel')
+const daysjs = require('dayjs')
 
-// Fonction pour créer une nouvelle réservation
 const createReservation = async (req, res) => {
   const reservationData = req.body;
 
@@ -11,31 +11,27 @@ const createReservation = async (req, res) => {
     return res.status(400).json({ message: 'Validation error', details: error.details });
   }
 
-  // Extraire et convertir serviceDate en format YYYY-MM-DD
-  const requestedDate = new Date(reservationData.serviceDate);
-  const requestedDateString = requestedDate.toISOString().split('T')[0];
+  // Créer un objet dayjs à partir de serviceDate au format DD-MM-YYYY pour la comparaison
+  const formattedRequestedDate = daysjs(reservationData.serviceDate, 'DD-MM-YYYY');
+  const today = daysjs().startOf('day'); // Utiliser startOf('day') pour ignorer l'heure
 
-  const today = new Date();
-  const todayString = today.toISOString().split('T')[0];
+  if (!formattedRequestedDate.isAfter(today)) {
+    return res.status(400).json({ message: 'The service date cannot be in the past or today.' });
+  }
 
   try {
-    if (requestedDateString <= todayString) {
-      return res.status(400).json({ message: 'The service date cannot be in the past or today.' });
-    }
-
     const reservationsRef = db.collection('reservations');
-    // Utilisez le format YYYY-MM-DD pour la comparaison
-    const querySnapshot = await reservationsRef.where('serviceDate', '==', requestedDateString).get();
+    // Pas besoin de reformater la date, utiliser directement reservationData.serviceDate
+    const querySnapshot = await reservationsRef.where('serviceDate', '==', reservationData.serviceDate).get();
 
+    console.log(querySnapshot);
+    
     if (querySnapshot.size >= 3) {
       return res.status(400).json({ message: 'This service date has reached the booking limit.' });
     }
 
-    // Ajoutez la réservation avec serviceDate au format YYYY-MM-DD
-    const reservationRef = await reservationsRef.add({
-      ...reservationData,
-      serviceDate: requestedDateString
-    });
+    // Ajouter la réservation avec serviceDate déjà au format DD-MM-YYYY
+    const reservationRef = await reservationsRef.add(reservationData);
 
     res.status(201).json({ message: 'Reservation created successfully', reservationId: reservationRef.id });
   } catch (error) {
@@ -45,11 +41,18 @@ const createReservation = async (req, res) => {
 };
 
 
+
   const getReservedDates = async (req, res) => {
     try {
       const reservationsSnapshot = await db.collection('reservations').get();
-      const reservationCounts = {};
   
+      if (reservationsSnapshot.empty) {
+        // Renvoyer un tableau vide si aucune réservation n'est trouvée
+        return res.status(200).json([]);
+      }
+
+      const reservationCounts = {};
+
       reservationsSnapshot.forEach(doc => {
         const { serviceDate } = doc.data();
         if (reservationCounts[serviceDate]) {
@@ -70,10 +73,39 @@ const createReservation = async (req, res) => {
       res.status(500).json({ message: "Failed to fetch reservation counts" });
     }
   };
+
+  
+  const getReservationsByUser = async (req, res) => {
+    try {
+
+      const shortID = req.query.shortID;
+      console.log("shortID " ,shortID);
+  
+      if (!shortID) {
+        return res.status(400).json({ error: 'ID utilisateur non disponible.' });
+      }
   
 
-
+      const reservations = [];
+      const snapshot = await db.collection('reservations').where('shortId', '==', shortID).get();
+  
+      if (snapshot.empty) {
+        return res.status(404).json({ error: 'Aucune réservation trouvée pour cet utilisateur.' });
+      }
+  
+      snapshot.forEach(doc => {
+        reservations.push({ id: doc.id, ...doc.data() });
+      });
+  
+      res.status(200).json(reservations);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des réservations:', error);
+      res.status(500).json({ error: 'Erreur interne du serveur.' });
+    }
+  };
+   
 module.exports = {
   createReservation,
-  getReservedDates
+  getReservedDates, 
+  getReservationsByUser,
 };

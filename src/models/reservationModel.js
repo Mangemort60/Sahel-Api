@@ -1,6 +1,11 @@
 const Joi = require('joi');
 
 const reservationSchema = Joi.object({
+  agent: Joi.string(),
+  name: Joi.string().required(),
+  firstName: Joi.string().required(),
+  shortId: Joi.string().required(),
+  email: Joi.string().email().required(),
   formData: Joi.object({
     numberOfFloors: Joi.string().required(),
     sizeRange: Joi.string().required(),

@@ -35,7 +35,7 @@ const registerUser = async (req, res) => {
             name,
             firstName,
             email,
-            roles: ["client"],
+            role: "client",
             shortId, // Stocke le shortId généré
         });
 

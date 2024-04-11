@@ -73,7 +73,8 @@ exports.verifyPayment = async (req, res) => {
       const newReservation = {
         ...reservationData,
         paymentIntentId,
-        status: 'confirmée',
+        bookingStatus : 'confirmé',
+        serviceStatus: 'à venir',
         createdAt: new Date(), // Utilisez FieldValue.serverTimestamp pour une heure exacte
       };
 

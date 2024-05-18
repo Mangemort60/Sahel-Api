@@ -1,6 +1,5 @@
 const { admin } = require('../../config/firebaseConfig');
 const { db } = require('../../config/firebaseConfig');
-const Joi = require('joi');
 const userSchema = require('../../models/userModel')
 
 const registerUser = async (req, res) => {

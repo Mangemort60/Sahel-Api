@@ -84,7 +84,7 @@ exports.sendEmailConfirmation = functions.firestore
       });
     });
 
-exports.updateReservationStatus = functions.pubsub.schedule("every 6 hour").onRun((context) => {
+exports.updateReservationStatus = functions.pubsub.schedule("every 6 hours").onRun((context) => {
   const today = new Date();
   const dateString = `${today.getDate().toString().padStart(2, "0")}-${(today.getMonth() + 1).toString().padStart(2, "0")}-${today.getFullYear()}`;
 

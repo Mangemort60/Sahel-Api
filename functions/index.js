@@ -25,6 +25,8 @@ const formatSizeRange = (sizeRange) => {
   }
 };
 
+// Envoi un email de confirmation au client lorsqu'il prend sa réservation
+
 exports.sendEmailConfirmation = functions.firestore
     .document("reservations/{reservationId}")
     .onCreate((snap, context) => {
@@ -83,6 +85,9 @@ exports.sendEmailConfirmation = functions.firestore
         console.error("Failed to send email:", error);
       });
     });
+
+
+// passe le statut de la réservation "à venir" à "en cours " le jour de la préstation
 
 exports.updateReservationStatus = functions.pubsub.schedule("every 6 hours").onRun((context) => {
   const today = new Date();

@@ -5,7 +5,8 @@ const verifyToken = require('../middleware/authMiddleware');
 const { getUserDataAndVerifyToken } = require('../controllers/authController');
 
 // Route pour créer une nouvelle réservation
-router.post('/reservations',  createReservation);
+
+// router.post('/reservations',  createReservation);
 router.get('/reserved-dates', getReservedDates);
 router.get('/mes-reservations',  getReservationsByUser)
 

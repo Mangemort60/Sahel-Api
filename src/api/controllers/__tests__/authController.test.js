@@ -45,7 +45,6 @@ describe('authController - registerUser', () => {
             .post('/register')
             .send({ email: 'test@example.com', password: 'Password1!', name: 'Test', firstName: 'User' });
 
-        console.log('Response:', response.body);
 
         expect(response.status).toBe(201);
         expect(response.body).toHaveProperty('message', 'User created successfully.');

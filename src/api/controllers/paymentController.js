@@ -68,16 +68,26 @@ exports.verifyPayment = async (req, res) => {
 
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
+    const isBeforeOrAfter = reservationData.formData.beforeOrAfter
+
+     
     if (paymentIntent.status === 'succeeded') {
       // Créez la réservation dans la collection 'reservations' de Firestore
-      const newReservation = {
+      let newReservation = {
         ...reservationData,
         paymentIntentId,
-        bookingStatus : 'confirmé',
+        bookingStatus: 'confirmé',
         serviceStatus: 'à venir',
         createdAt: new Date(), // Utilisez FieldValue.serverTimestamp pour une heure exacte
       };
 
+      // Ajout conditionnel du champ keyReceived
+      if (isBeforeOrAfter === "before") {
+        newReservation = {
+          ...newReservation,
+          keyReceived: false,
+        };
+      }
       const docRef = await db.collection('reservations').add(newReservation);
 
     // Récupération du document utilisateur basé sur shortId

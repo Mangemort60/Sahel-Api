@@ -1,12 +1,17 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable max-len */
+require("dotenv").config();
+
 const functions = require("firebase-functions");
+const {onSchedule} = require("firebase-functions/v2/scheduler");
 const SibApiV3Sdk = require("sib-api-v3-sdk");
 // Configurez le client Sendinblue
 const client = SibApiV3Sdk.ApiClient.instance;
 const apiKey = client.authentications["api-key"];
-apiKey.apiKey = functions.config().sendinblue.key;
+apiKey.apiKey = process.env.SENDINBLUE_KEY || functions.config().sendinblue.key;
+
 const {admin} = require("./firebaseFunctionsConfig");
+const {logger} = require("firebase-functions");
 
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
@@ -89,21 +94,88 @@ exports.sendEmailConfirmation = functions.firestore
 
 // passe le statut de la réservation "à venir" à "en cours " le jour de la préstation
 
-exports.updateReservationStatus = functions.pubsub.schedule("every 6 hours").onRun((context) => {
+exports.updateReservationStatus = onSchedule("every 6 hours", async (event) => {
+  const currentDate = new Date();
+  logger.info("updateReservationStatus function triggered at: ", currentDate.toISOString());
+
   const today = new Date();
   const dateString = `${today.getDate().toString().padStart(2, "0")}-${(today.getMonth() + 1).toString().padStart(2, "0")}-${today.getFullYear()}`;
 
-  return admin.firestore().collection("reservations")
-      .where("serviceDate", "==", dateString)
-      .where("serviceStatus", "==", "à venir")
-      .get()
-      .then((snapshot) => {
-        const updates = [];
-        snapshot.forEach((doc) => {
-          updates.push(doc.ref.update({serviceStatus: "en cours"}));
-        });
-        return Promise.all(updates);
-      })
-      .then(() => console.log("Updated reservations successfully"))
-      .catch((error) => console.error("Error updating reservations", error));
+  logger.info("Filtering reservations with date:", dateString);
+
+  try {
+    const snapshot = await admin.firestore().collection("reservations")
+        .where("serviceDate", "==", dateString)
+        .where("serviceStatus", "==", "à venir")
+        .get();
+
+    logger.info(`Found ${snapshot.size} reservations to update`);
+
+    const updates = [];
+    snapshot.forEach((doc) => {
+      logger.info(`Updating reservation ${doc.id}`);
+      updates.push(doc.ref.update({serviceStatus: "en cours"}));
+    });
+
+    await Promise.all(updates);
+    logger.info("Updated reservations successfully");
+  } catch (error) {
+    logger.error("Error updating reservations", error);
+    throw new Error("Error updating reservations");
+  }
 });
+// Fonction pour envoyer un email lorsque keyReceived est mis à jour à true
+exports.sendEmailOnKeyReceived = functions.firestore
+    .document("reservations/{reservationId}")
+    .onUpdate((change, context) => {
+      const newValue = change.after.data();
+      const previousValue = change.before.data();
+
+      // Vérifiez si keyReceived est passé de false à true
+      if (!previousValue.keyReceived && newValue.keyReceived) {
+        const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+
+        sendSmtpEmail.sender = {email: "sahel@example.com", name: "Sahel"};
+        sendSmtpEmail.to = [{email: "hahaddaoui@gmail.com"}]; // Assurez-vous que l'email du client est bien stocké dans reservationData
+        sendSmtpEmail.subject = "Clés reçues";
+        sendSmtpEmail.htmlContent = `<html lang="fr">
+        <head>
+          <meta charset="UTF-8">
+          <title>Confirmation de Réception des Clés</title>
+          <style>
+            body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; }
+            table { width: 100%; max-width: 600px; margin: auto; background-color: white; }
+            .header { background-color: #ac5f40; color: white; padding: 10px; text-align: center; }
+            .content { padding: 20px; }
+            p { color: #666666; margin-top: 10px; margin-bottom: 10px; }
+          </style>
+        </head>
+        <body>
+          <div>
+            <table border="0" cellpadding="0" cellspacing="0">
+              <tr>
+                <td class="header">
+                  <h1>Confirmation de Réception des Clés</h1>
+                </td>
+              </tr>
+              <tr>
+                <td class="content">
+                  <p>Bonjour ${newValue.firstName},</p>
+                  <p>Nous confirmons la réception de vos clés pour votre réservation prévue le <strong>${newValue.serviceDate}</strong>.</p>
+                  <p>Merci de votre confiance.</p>
+                  <p>Cordialement,</p>
+                  <p>L'équipe Sahel</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </body>
+      </html>`;
+
+        apiInstance.sendTransacEmail(sendSmtpEmail).then((data) => {
+          console.log("Email sent successfully");
+        }, (error) => {
+          console.error("Failed to send email:", error);
+        });
+      }
+    });

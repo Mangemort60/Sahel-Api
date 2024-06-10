@@ -6,6 +6,7 @@ const authRoutes = require('./api/routes/authRoutes');
 const quoteRoutes = require('./api/routes/quoteRoutes');
 const paymentRoutes = require('./api/routes/paymentRoutes')
 const reservationRoutes = require('./api/routes/reservationRoutes');
+const chatRoutes = require('./api/routes/chatRoutes')
 
 app.use(express.json());
 app.use(cors());
@@ -21,6 +22,7 @@ app.use('/', quoteRoutes)
 app.use('/', reservationRoutes)
 app.use('/', paymentRoutes)
 app.use('/auth', authRoutes)
+app.use('/', chatRoutes)
 
 
 module.exports = app

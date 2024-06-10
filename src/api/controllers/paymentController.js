@@ -78,7 +78,13 @@ exports.verifyPayment = async (req, res) => {
         paymentIntentId,
         bookingStatus: 'confirmé',
         serviceStatus: 'à venir',
-        createdAt: new Date(), // Utilisez FieldValue.serverTimestamp pour une heure exacte
+        createdAt: new Date(),
+        emails : {
+          confirmationEmailSent: false,
+          instructionsKeysEmailSent: false,
+          defaultInstructionsEmailSent: false,
+
+        },// Utilisez FieldValue.serverTimestamp pour une heure exacte
       };
 
       // Ajout conditionnel du champ keyReceived

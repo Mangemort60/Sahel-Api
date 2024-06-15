@@ -17,9 +17,9 @@
     "zod": "^3.23.8"
   },
   "scripts": {
-    "start": "nodemon src/server.js",
-    "test": "jest"
-  },
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"  },
+    
   "devDependencies": {
     "jest": "^29.7.0",
     "nodemon": "^3.1.0",

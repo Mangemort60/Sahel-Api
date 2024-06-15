@@ -1,12 +1,19 @@
 // routes/chatRoutes.js
 const express = require('express');
-const { getMessages, sendMessage } = require('../controllers/chatController');
+const { getMessages, sendMessage, getNewMessages, markMessagesAsReadByAgent, markMessagesAsReadByClient } = require('../controllers/chatController');
 const multer = require('multer');
 
-const upload = multer(); // Configuration de multer pour les fichiers en mémoire
+const upload = multer({
+    limits: {
+      fileSize: 10 * 1024 * 1024, // Limite à 10MB
+    },
+  });
 const router = express.Router();
 
 router.get('/reservations/:reservationId/messages', getMessages);
 router.post('/reservations/:reservationId/messages', upload.array('files'), sendMessage);
+router.get('/new-messages', getNewMessages);
+router.put('/reservations/:reservationId/messages/read-by-agent', markMessagesAsReadByAgent);
+router.put('/reservations/:reservationId/messages/read-by-client', markMessagesAsReadByClient);
 
 module.exports = router;

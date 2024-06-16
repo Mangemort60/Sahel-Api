@@ -9,7 +9,11 @@ const reservationRoutes = require('./api/routes/reservationRoutes');
 const chatRoutes = require('./api/routes/chatRoutes')
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:4173','http://localhost:5173', 'https://sahel-back-286afc7b2555.herokuapp.com'], // Ajoutez vos domaines frontend ici
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

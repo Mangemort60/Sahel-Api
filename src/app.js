@@ -10,7 +10,7 @@ const chatRoutes = require('./api/routes/chatRoutes')
 
 app.use(express.json());
 app.use(cors({
-  origin: ['http://localhost:4173','http://localhost:5173', 'https://sahel-back-286afc7b2555.herokuapp.com', 'https://sahel-26e16.web.app', 'https://sahel-admin.web.app'  ], // Ajoutez vos domaines frontend ici
+  origin: ['http://localhost:4173','http://localhost:5173', 'https://sahel-back-286afc7b2555.herokuapp.com', 'https://sahel-26e16.web.app', 'https://sahel-admin.web.app' ,'https://sahel-26e16.firebaseapp.com/', "https://sahel-admin.firebaseapp.com/" ], // Ajoutez vos domaines frontend ici
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

@@ -84,7 +84,8 @@ exports.verifyPayment = async (req, res) => {
           instructionsKeysEmailSent: false,
           defaultInstructionsEmailSent: false,
 
-        },// Utilisez FieldValue.serverTimestamp pour une heure exacte
+        },
+        chatStatus: true,
       };
 
       // Ajout conditionnel du champ keyReceived

@@ -7,10 +7,13 @@ const quoteRoutes = require('./api/routes/quoteRoutes');
 const paymentRoutes = require('./api/routes/paymentRoutes')
 const reservationRoutes = require('./api/routes/reservationRoutes');
 const chatRoutes = require('./api/routes/chatRoutes')
+const contactRoutes = require('./api/routes/contactRoutes')
+const helmet = require('helmet');
 
+app.use(helmet()); 
 app.use(express.json());
 app.use(cors({
-  origin: ['http://localhost:4173','http://localhost:5173', 'https://sahel-back-286afc7b2555.herokuapp.com', 'https://sahel-26e16.web.app', 'https://sahel-admin.web.app' ,'https://sahel-26e16.firebaseapp.com', "https://sahel-admin.firebaseapp.com" ], // Ajoutez vos domaines frontend ici
+  origin: ['http://localhost:4173','http://localhost:5173','http://localhost:3000', 'https://sahel-back-286afc7b2555.herokuapp.com', 'https://sahel-26e16.web.app', 'https://sahel-admin.web.app' ,'https://sahel-26e16.firebaseapp.com', "https://sahel-admin.firebaseapp.com" ], // Ajoutez vos domaines frontend ici
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -25,6 +28,7 @@ app.use('/', reservationRoutes)
 app.use('/', paymentRoutes)
 app.use('/auth', authRoutes)
 app.use('/', chatRoutes)
+app.use('/', contactRoutes)
 
 
 module.exports = app

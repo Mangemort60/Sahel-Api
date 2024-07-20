@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, getUserDataAndVerifyToken } = require('../controllers/authController');
+const { registerUser, getUserDataAndVerifyToken, resetPassword } = require('../controllers/authController');
 
 // Route pour l'inscription
 router.post('/register', registerUser);
@@ -17,6 +17,6 @@ router.get('/login', getUserDataAndVerifyToken, (req, res) => {
       res.status(404).json({ error: 'Utilisateur non trouvé' });
     }
   });
-
+router.post('/forgot-password', resetPassword)
 
 module.exports = router;

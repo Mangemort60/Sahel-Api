@@ -167,3 +167,31 @@ exports.markMessagesAsReadByClient = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
+
+
+exports.toggleChatStatus = async (req, res) => {
+  const { reservationId } = req.params;
+
+  try {
+    const reservationRef = db.collection('reservations').doc(reservationId);
+    const reservationDoc = await reservationRef.get();
+
+    if (!reservationDoc.exists) {
+      return res.status(404).send('Reservation not found');
+    }
+
+    // Récupérer le statut actuel du chat
+    const currentStatus = reservationDoc.data().chatStatus;
+
+    // Basculer le statut du chat
+    const newStatus = !currentStatus;
+
+    // Mettre à jour le champ chatStatus de la réservation
+    await reservationRef.update({ chatStatus: newStatus });
+
+    return res.status(200).send({ message: 'Chat status updated successfully', chatStatus: newStatus });
+  } catch (error) {
+    console.error('Error updating chat status:', error);
+    return res.status(500).send('An error occurred while updating the chat status');
+  }
+};

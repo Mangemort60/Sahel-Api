@@ -45,8 +45,10 @@ exports.sendMessage = async (req, res) => {
     }
   
     try {
+      console.log("clientEmail ", clientEmail);
       const message = {
         sender,
+        clientEmail,
         text,
         role,
         attachments: attachmentUrls.map((url, index) => ({
@@ -125,7 +127,9 @@ exports.markMessagesAsReadByAgent = async (req, res) => {
     }
 
     const reservationData = reservationDoc.data();
-    const updatedMessages = reservationData.messages.map((message) => {
+    const messages = reservationData.messages || []; // Initialisez à un tableau vide si indéfini
+
+    const updatedMessages = messages.map((message) => {
       if (!message.readByAgent) {
         message.readByAgent = true;
       }
@@ -152,7 +156,9 @@ exports.markMessagesAsReadByClient = async (req, res) => {
     }
 
     const reservationData = reservationDoc.data();
-    const updatedMessages = reservationData.messages.map((message) => {
+    const messages = reservationData.messages || []; // Initialisez à un tableau vide si indéfini
+
+    const updatedMessages = messages.map((message) => {
       if (!message.readByClient) {
         message.readByClient = true;
       }
@@ -167,7 +173,6 @@ exports.markMessagesAsReadByClient = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-
 
 exports.toggleChatStatus = async (req, res) => {
   const { reservationId } = req.params;

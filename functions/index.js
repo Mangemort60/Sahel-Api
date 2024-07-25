@@ -38,7 +38,9 @@ exports.sendEmailConfirmation = functions.firestore
       const reservationData = snap.data();
       const reservationId = context.params.reservationId;
 
+
       console.log(`Function triggered for reservationId: ${reservationId}`);
+      console.log("RESERVATION EMAIL", reservationData.email);
 
       const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 

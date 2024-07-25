@@ -44,9 +44,10 @@ exports.sendEmailConfirmation = functions.firestore
 
       // Envoyer l'email de confirmation si pas déjà envoyé
       if (!reservationData.emails.confirmationEmailSent) {
+        console.log("reservation email :", reservationData.email);
         const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
         sendSmtpEmail.sender = {email: "sahel@example.com", name: "Sahel"};
-        sendSmtpEmail.to = [{email: "hahaddaoui@gmail.com"}];
+        sendSmtpEmail.to = [{email: reservationData.email}];
         sendSmtpEmail.subject = "Confirmation de votre réservation";
         sendSmtpEmail.htmlContent = `<html lang="fr">
         <head>
@@ -93,7 +94,7 @@ exports.sendEmailConfirmation = functions.firestore
         `;
 
         try {
-          console.log(`Sending confirmation email to: "hahaddaoui@gmail.com"`);
+          console.log(`Sending confirmation email to: ${reservationData.email}`);
           await apiInstance.sendTransacEmail(sendSmtpEmail);
           console.log("Confirmation email sent successfully");
 
@@ -113,7 +114,7 @@ exports.sendEmailConfirmation = functions.firestore
       if (reservationData.formData.beforeOrAfter === "before" && !reservationData.emails.instructionsKeysEmailSent) {
         const sendKeysEmail = new SibApiV3Sdk.SendSmtpEmail();
         sendKeysEmail.sender = {email: "sahel@example.com", name: "Sahel"};
-        sendKeysEmail.to = [{email: "hahaddaoui@gmail.com"}];
+        sendKeysEmail.to = [{email: reservationData.email}];
         sendKeysEmail.subject = "Instructions pour la remise des clés";
         sendKeysEmail.htmlContent = `<html lang="fr">
         <head>
@@ -154,7 +155,7 @@ exports.sendEmailConfirmation = functions.firestore
         `;
 
         try {
-          console.log(`Sending keys instructions email to: "hahaddaoui@gmail.com"`);
+          console.log(`Sending keys instructions email to: ${reservationData.email}`);
           await apiInstance.sendTransacEmail(sendKeysEmail);
           console.log("Keys instructions email sent successfully");
 
@@ -174,7 +175,7 @@ exports.sendEmailConfirmation = functions.firestore
       if (reservationData.formData.beforeOrAfter !== "before" && !reservationData.emails.defaultInstructionsEmailSent) {
         const sendDefaultInstructionsEmail = new SibApiV3Sdk.SendSmtpEmail();
         sendDefaultInstructionsEmail.sender = {email: "sahel@example.com", name: "Sahel"};
-        sendDefaultInstructionsEmail.to = [{email: "hahaddaoui@gmail.com"}];
+        sendDefaultInstructionsEmail.to = [{email: reservationData.email}];
         sendDefaultInstructionsEmail.subject = "Instructions par défaut";
         sendDefaultInstructionsEmail.htmlContent = `<html lang="fr">
         <head>
@@ -215,7 +216,7 @@ exports.sendEmailConfirmation = functions.firestore
         `;
 
         try {
-          console.log(`Sending default instructions email to: "hahaddaoui@gmail.com"`);
+          console.log(`Sending default instructions email to: ${reservationData.email}`);
           await apiInstance.sendTransacEmail(sendDefaultInstructionsEmail);
           console.log("Default instructions email sent successfully");
 
@@ -276,7 +277,7 @@ exports.sendEmailOnKeyReceived = functions.firestore
         const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
         sendSmtpEmail.sender = {email: "sahel@example.com", name: "Sahel"};
-        sendSmtpEmail.to = [{email: "hahaddaoui@gmail.com"}]; // Assurez-vous que l'email du client est bien stocké dans reservationData
+        sendSmtpEmail.to = [{email: newValue.email}]; // Assurez-vous que l'email du client est bien stocké dans reservationData
         sendSmtpEmail.subject = "Clés reçues";
         sendSmtpEmail.htmlContent = `<html lang="fr">
         <head>

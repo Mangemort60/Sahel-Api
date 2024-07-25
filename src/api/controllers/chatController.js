@@ -2,6 +2,7 @@ require("dotenv").config();
 const { db,bucket, FieldValue } = require('../../config/firebaseConfig');
 const { v4: uuidv4 } = require('uuid');
 const SibApiV3Sdk = require('sib-api-v3-sdk');
+const { log } = require("firebase-functions/logger");
 
 // Configure SendInBlue
 let defaultClient = SibApiV3Sdk.ApiClient.instance;
@@ -27,7 +28,7 @@ exports.getMessages = async (req, res) => {
 // Envoyer un nouveau message avec pièces jointes
 exports.sendMessage = async (req, res) => {
     const { reservationId } = req.params;
-    const { sender, text, role } = req.body;
+    const { sender, text, role, clientEmail } = req.body;
     let attachmentUrls = [];
     let attachmentTypes = [];
   
@@ -67,14 +68,13 @@ exports.sendMessage = async (req, res) => {
           const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
           const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-          sendSmtpEmail.to = [{ email: 'hahaddaoui@gmail.com' }];
+
+          sendSmtpEmail.to = [{ email: clientEmail }];
           sendSmtpEmail.sender = { email: 'sahel@example.com', name: 'Sahel' };  // Remplacez par votre email et nom
           sendSmtpEmail.subject = 'Vous avez reçu une réponse de l\'administrateur';
           sendSmtpEmail.textContent = `Bonjour,
 
-Vous avez reçu une nouvelle réponse de notre équipe. Cliquez sur le lien ci-dessous pour la lire 
-
-http://localhost:5173/login?redirectTo=%2Fclient-dashboard%2FchatBox%2F${reservationId}
+Vous avez reçu une nouvelle réponse de notre équipe. Veuillez accéder à votre espace client pour consulter le message.
 
 Merci,
 Votre équipe`;

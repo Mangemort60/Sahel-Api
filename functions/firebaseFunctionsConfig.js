@@ -3,7 +3,9 @@
 require("dotenv").config();
 const admin = require("firebase-admin");
 
-console.log("MY_PRIVATE_KEY:", process.env.MY_PRIVATE_KEY ? "PRIVATE_KEY_EXISTS" : "NO_PRIVATE_KEY");
+console.log("MY_FIREBASE_PROJECT_ID:", process.env.MY_FIREBASE_PROJECT_ID);
+console.log("MY_FIREBASE_PRIVATE_KEY_ID:", process.env.MY_FIREBASE_PRIVATE_KEY_ID ? "Loaded" : "Missing");
+console.log("MY_FIREBASE_CLIENT_EMAIL:", process.env.MY_FIREBASE_CLIENT_EMAIL);
 
 const serviceAccount = {
   type: "service_account",

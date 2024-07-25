@@ -37,6 +37,7 @@ exports.sendEmailConfirmation = functions.firestore
     .onCreate(async (snap, context) => {
       const reservationData = snap.data();
       const reservationId = context.params.reservationId;
+      log;
 
 
       console.log(`Function triggered for reservationId: ${reservationId}`);
@@ -273,6 +274,7 @@ exports.sendEmailOnKeyReceived = functions.firestore
     .onUpdate((change, context) => {
       const newValue = change.after.data();
       const previousValue = change.before.data();
+      console.log(newValue.email);
 
       // Vérifiez si keyReceived est passé de false à true
       if (!previousValue.keyReceived && newValue.keyReceived) {

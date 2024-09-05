@@ -37,7 +37,6 @@ exports.sendEmailConfirmation = functions.firestore
     .onCreate(async (snap, context) => {
       const reservationData = snap.data();
       const reservationId = context.params.reservationId;
-      log;
 
 
       console.log(`Function triggered for reservationId: ${reservationId}`);
@@ -84,7 +83,7 @@ exports.sendEmailConfirmation = functions.firestore
                             <p class="info"><span class="bold">Nombre d'étages :</span> ${reservationData.formData.numberOfFloors}</p>
                             <p class="info"><span class="bold">Surface :</span> ${formatSizeRange(reservationData.formData.sizeRange)}</p>
                             <p class="info"><span class="bold">Panier de fruits :</span> ${reservationData.formData.fruitBasketSelected ? "oui" : "non"}</p>
-                            <p class="info"><span class="bold">Le nettoyage sera fait ${reservationData.formData.beforeOrAfter === "Before" ? "avant" : "après"} votre arrivée</p>
+                            <p class="info"><span class="bold">Le nettoyage sera fait ${reservationData.formData.beforeOrAfter === "before" ? "avant" : "après"} votre arrivée</p>
                             <p class="info"><span class="bold">Adresse de la prestation :</span> ${reservationData.bookingFormData.address} - ${reservationData.bookingFormData.city}</p>
                             ${reservationData.bookingFormData.specialInstructions ? `<p class="info"><span class="bold">Instructions spéciales :</span> ${reservationData.bookingFormData.specialInstructions}</p>` : ""}
                             <p class="info"><span class="bold">TOTAL TTC :</span> ${reservationData.quote}€</p>
@@ -231,7 +230,7 @@ exports.sendEmailConfirmation = functions.firestore
         } catch (error) {
           console.error("Failed to send default instructions email:", error);
         }
-      } else if (reservationData.formData.beforeOrAfter !== "Before") {
+      } else if (reservationData.formData.beforeOrAfter !== "before") {
         console.log(`Default instructions email already sent for reservationId: ${reservationId}`);
       }
     });

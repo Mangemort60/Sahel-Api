@@ -42,6 +42,7 @@ exports.createPayment = async (req, res) => {
       currency: 'eur',
       customer: customerId,
       receipt_email: email,
+      payment_method_types: ['card']
     });
 
 
@@ -54,7 +55,7 @@ exports.createPayment = async (req, res) => {
 };
 
 exports.verifyPayment = async (req, res) => {
-  const { paymentIntentId, reservationData } = req.body;
+  const { paymentIntentId, reservationData, reservationType } = req.body;
 
   try {
     const existingReservation = await db.collection('reservations')
@@ -74,6 +75,7 @@ exports.verifyPayment = async (req, res) => {
     if (paymentIntent.status === 'succeeded') {
       // Créez la réservation dans la collection 'reservations' de Firestore
       let newReservation = {
+        reservationType: reservationType,
         ...reservationData,
         paymentIntentId,
         bookingStatus: 'confirmé',

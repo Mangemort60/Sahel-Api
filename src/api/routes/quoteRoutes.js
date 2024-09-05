@@ -1,7 +1,9 @@
 const express = require('express');
-const { calculateQuote } = require('../controllers/quoteController');
+const {  calculateCleaningQuote, calculateCookingQuote } = require('../controllers/quoteController');
 const router = express.Router();
 
-router.post('/quote', calculateQuote);
+router.post('/cleaning-quote', calculateCleaningQuote);
+router.post('/cooking-quote', calculateCookingQuote);
+
 
 module.exports = router;

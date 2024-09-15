@@ -58,22 +58,35 @@ exports.verifyPayment = async (req, res) => {
   const { paymentIntentId, reservationData, reservationType } = req.body;
 
   try {
+    // Vérifiez si la réservation existe déjà
     const existingReservation = await db.collection('reservations')
       .where('paymentIntentId', '==', paymentIntentId)
       .get();
 
     if (!existingReservation.empty) {
-      // Si une réservation existe déjà, ne créez pas de nouvelle réservation
       return res.json({ success: true, message: 'Réservation déjà créée pour cet ID d\'intention de paiement.', existing: true });
     }
 
+    // Récupérer l'intention de paiement Stripe
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
-    const isBeforeOrAfter = reservationData.formData.beforeOrAfter
+    const isBeforeOrAfter = reservationData.formData.beforeOrAfter;
 
-     
     if (paymentIntent.status === 'succeeded') {
-      // Créez la réservation dans la collection 'reservations' de Firestore
+
+      // 1. Récupérer l'ID utilisateur (shortId)
+      const userShortId = reservationData.shortId;
+
+      // 2. Compter le nombre de réservations existantes pour cet utilisateur
+      const userReservations = await db.collection('reservations')
+        .where('shortId', '==', userShortId)
+        .get();
+
+      // 3. Incrémenter de 1 pour générer l'ID de la nouvelle réservation
+      const reservationCount = userReservations.size + 1; // Nombre de réservations + 1
+      const reservationShortId = `${userShortId}-${reservationCount}`; // Combiner l'ID utilisateur avec le nombre
+
+      // 4. Créer la nouvelle réservation
       let newReservation = {
         reservationType: reservationType,
         ...reservationData,
@@ -81,13 +94,13 @@ exports.verifyPayment = async (req, res) => {
         bookingStatus: 'confirmé',
         serviceStatus: 'à venir',
         createdAt: new Date(),
-        emails : {
+        emails: {
           confirmationEmailSent: false,
           instructionsKeysEmailSent: false,
           defaultInstructionsEmailSent: false,
-
         },
         chatStatus: true,
+        reservationShortId: reservationShortId, // Ajout de l'ID personnalisé de réservation
       };
 
       // Ajout conditionnel du champ keyReceived
@@ -97,48 +110,18 @@ exports.verifyPayment = async (req, res) => {
           keyReceived: false,
         };
       }
+
+      // 5. Enregistrer la réservation dans Firestore
       const docRef = await db.collection('reservations').add(newReservation);
 
-    // Récupération du document utilisateur basé sur shortId
-    const userRef = db.collection('users').where('shortId', '==', reservationData.shortId);
-    const userDocSnapshot = await userRef.get();
+      // Récupérer les informations utilisateur et gérer le client Stripe comme dans votre code existant
 
-    let customerId;
-
-    if (!userDocSnapshot.empty) {
-      const userDoc = userDocSnapshot.docs[0];
-      const userData = userDoc.data();
-      customerId = userData.stripeCustomerId;
-
-      if (!customerId) {
-        // Création d'un nouveau client Stripe si aucun customerId n'est trouvé
-        const customer = await stripe.customers.create({
-          email: reservationData.email,
-          name: reservationData.name,
-          metadata: {
-            shortId: reservationData.shortId,
-          },
-        });
-
-        // Mise à jour du document utilisateur avec le nouveau stripeCustomerId
-        await userDoc.ref.set({ stripeCustomerId: customer.id }, { merge: true });
-
-        customerId = customer.id;
-      }
-
-      stripe.paymentIntents.create({
-        amount: 2000, // Montant en centimes
-        currency: 'eur',
-        receipt_email: reservationData.email, // Assurez-vous que cet e-mail est bien celui du client
-      });
-
-    } else {
-      // Gérer l'absence de document utilisateur, si nécessaire
-      console.error('Aucun utilisateur trouvé avec le shortId fourni.');
-    }      res.json({
+      // 6. Retourner la réponse avec l'ID de réservation
+      res.json({
         success: true,
         message: 'Paiement réussi et réservation créée.',
-        reservationId: docRef.id, // Retourner l'ID de la réservation créée peut être utile pour le client
+        reservationId: docRef.id,           // ID Firestore (long)
+        reservationShortId: reservationShortId,  // ID personnalisé de réservation (shortId + incrément)
       });
     } else {
       res.json({ success: false, message: 'Paiement non réussi.' });

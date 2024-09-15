@@ -48,7 +48,7 @@ exports.sendEmailConfirmation = functions.firestore
       if (!reservationData.emails.confirmationEmailSent) {
         console.log("reservation email :", reservationData.email);
         const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-        sendSmtpEmail.sender = {email: "sahel@example.com", name: "Sahel"};
+        sendSmtpEmail.sender = {email: "hahaddaoui@gmail.com", name: "Sahel"};
         sendSmtpEmail.to = [{email: reservationData.email}];
         sendSmtpEmail.subject = "Confirmation de votre réservation";
         sendSmtpEmail.htmlContent = `<html lang="fr">
@@ -279,7 +279,7 @@ exports.sendEmailOnKeyReceived = functions.firestore
       if (!previousValue.keyReceived && newValue.keyReceived) {
         const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
-        sendSmtpEmail.sender = {email: "sahel@example.com", name: "Sahel"};
+        sendSmtpEmail.sender = {email: "hahaddaoui@gmail.com", name: "Sahel"};
         sendSmtpEmail.to = [{email: newValue.email}]; // Assurez-vous que l'email du client est bien stocké dans reservationData
         sendSmtpEmail.subject = "Clés reçues";
         sendSmtpEmail.htmlContent = `<html lang="fr">

@@ -27,6 +27,8 @@ const registerUser = async (req, res) => {
         // Combiner les parties pour former le shortId
         const shortId = `${randomPart}${counter.toString().padStart(5, '0')}`; // Formate le compteur sur 5 chiffres
 
+        const role = "client";
+
         // Création de l'utilisateur
         const userRecord = await admin.auth().createUser({
             email,
@@ -38,11 +40,14 @@ const registerUser = async (req, res) => {
             name,
             firstName,
             email,
-            role: "client",
+            role,
             shortId, // Stocke le shortId généré
         });
 
-        res.status(201).json({ message: 'User created successfully.', shortId });
+                // Générer un token d'authentification personnalisé pour l'utilisateur
+         const customToken = await admin.auth().createCustomToken(userRecord.uid);
+
+        res.status(201).json({ message: 'User created successfully.', shortId, token: customToken, role });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });

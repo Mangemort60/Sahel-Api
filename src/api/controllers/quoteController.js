@@ -45,41 +45,100 @@ const calculateCleaningQuote = async (req, res) => {
     }
 };
 
-
 const calculateCookingQuote = async (req, res) => {
-    const { period, numberOfPeople } = req.body;
+    const { period, numberOfPeople, exactNumberOfPeople } = req.body;
 
     try {
-        // Récupère les détails tarifaires en fonction de la période et du nombre de personnes
-        const rateDetails = await getCookingRateDetails(period, numberOfPeople);
+        // Stockage des données directement dans le contrôleur
+        const rateDetails = {
+            journee: {
+                logisticCost: 5,
+                margin: 50,
+                taxes: 30,
+                costVariable: {
+                    "1_8": 28,
+                    "9_plus": 29
+                }
+            },
+            soirMidi: {
+                logisticCost: 5,
+                margin: 50,
+                taxes: 30,
+                costVariable: {
+                    "1_8": 11,
+                    "9_plus": 12
+                }
+            }
+        };
 
-        if (!rateDetails) {
-            return res.status(404).json({ message: 'Rate details not found' });
+        // Vérification si la période existe
+        const periodDetails = rateDetails[period];
+        if (!periodDetails) {
+            return res.status(404).json({ message: 'Période non trouvée' });
         }
 
-        const { coutLogistique, coutProduction, coutVariable, marge, taxes } = rateDetails;
+        const { logisticCost, margin, taxes, costVariable } = periodDetails;
 
-        if ([coutLogistique, coutProduction, coutVariable, marge, taxes].some(value => value == null || isNaN(Number(value)))) {
-            throw new Error('Invalid pricing configuration');
+        // Vérification si c'est 9+ personnes
+        const isNumberOfPeopleNinePlus = numberOfPeople === '9_plus' && exactNumberOfPeople && !isNaN(parseInt(exactNumberOfPeople, 10));
+
+        // Calcul du coût variable de base (1 à 8 personnes)
+        let costVariableFinal = isNumberOfPeopleNinePlus ? costVariable['9_plus'] : costVariable['1_8'];
+
+        // Si 9+ personnes, calculer le coût supplémentaire
+        if (isNumberOfPeopleNinePlus) {
+            const personnesSupplementaires = parseInt(exactNumberOfPeople, 10) - 8;
+            if (personnesSupplementaires > 0) {
+                // Ajout de 1,2€ par personne supplémentaire
+                const coutSuppPersonne = personnesSupplementaires * 1.2;
+                costVariableFinal += coutSuppPersonne; // Ajout du coût supplémentaire
+            }
+        } else if (numberOfPeople > 8) {
+            // Si nous sommes dans le cas de plus de 8 personnes mais sans exactNumberOfPeople, on suppose exactNumberOfPeople = numberOfPeople
+            const personnesSupplementaires = parseInt(numberOfPeople, 10) - 8;
+            if (personnesSupplementaires > 0) {
+                const coutSuppPersonne = personnesSupplementaires * 1.2;
+                costVariableFinal += coutSuppPersonne;
+            }
         }
 
-        // Calcul du prix HT
-        const marginEuro = Number(coutProduction) * (Number(marge) / 100);
-        const totalPriceHT = Math.ceil(Number(coutVariable) + Number(coutLogistique) + marginEuro);
+        // Calcul du coût de production (logistique + coût variable ajusté)
+        const coutDeProduction = logisticCost + costVariableFinal;
 
-        // Calcul du prix TTC
-        const taxesAndVAT = totalPriceHT * (Number(taxes) / 100);
-        let totalPrice = totalPriceHT + taxesAndVAT;
+        // Calcul de la marge en euro (marge en pourcentage appliquée au coût de production)
+        const margeEnEuro = coutDeProduction * (margin / 100);
+
+        // Calcul du prix HT (coût de production + marge en euro)
+        const totalPriceHT = margeEnEuro + coutDeProduction;
+
+        // Calcul du prix TTC (ajout des taxes)
+        const totalPriceTTC = totalPriceHT + (totalPriceHT * (taxes / 100));
 
         // Arrondir à deux décimales
-        totalPrice = Math.round(totalPrice * 100) / 100;
+        const roundedTotalPriceTTC = Math.round(totalPriceTTC * 100) / 100;
 
-        return res.json({ totalPrice });
+        // Debug : Afficher les valeurs calculées pour vérifier
+        console.log({
+            logisticCost,
+            costVariableFinal,
+            coutDeProduction,
+            margeEnEuro,
+            totalPriceHT,
+            totalPriceTTC,
+            roundedTotalPriceTTC,
+            exactNumberOfPeople,
+            numberOfPeople
+        });
+
+        // Retourner le prix total calculé
+        return res.json({ totalPrice: roundedTotalPriceTTC });
     } catch (error) {
         console.error('Error calculating quote:', error);
         return res.status(500).json({ message: error.message });
     }
 };
+
+
 
 
 

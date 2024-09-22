@@ -1,6 +1,6 @@
 // routes/chatRoutes.js
 const express = require('express');
-const { getMessages, sendMessage, getNewMessages, markMessagesAsReadByAgent, markMessagesAsReadByClient,  toggleChatStatus } = require('../controllers/chatController');
+const { getMessages, sendMessage, getNewMessages, markMessagesAsReadByAgent, markMessagesAsReadByClient,  toggleChatStatus, getAllMessages } = require('../controllers/chatController');
 const multer = require('multer');
 
 const upload = multer({
@@ -10,6 +10,7 @@ const upload = multer({
   });
 const router = express.Router();
 
+router.get('/reservations/:userId/messages', getAllMessages)
 router.get('/reservations/:reservationId/messages', getMessages);
 router.post('/reservations/:reservationId/messages', upload.array('files'), sendMessage);
 router.get('/new-messages', getNewMessages);

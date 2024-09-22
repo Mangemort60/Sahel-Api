@@ -70,7 +70,7 @@ exports.verifyPayment = async (req, res) => {
     // Récupérer l'intention de paiement Stripe
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
-    const isBeforeOrAfter = reservationData.formData.beforeOrAfter;
+    const isBeforeOrAfter = reservationData.beforeOrAfter;
 
     if (paymentIntent.status === 'succeeded') {
 

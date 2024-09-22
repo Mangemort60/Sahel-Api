@@ -10,6 +10,41 @@ let apiKey = defaultClient.authentications['api-key'];
 apiKey.apiKey = process.env.SENDINBLUE_KEY || functions.config().sendinblue.key;
 // Remplacez par votre clé API SendInBlue
 
+exports.getAllMessages = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Récupérer toutes les réservations associées à l'utilisateur
+    const reservationsSnapshot = await db
+      .collection('reservations')
+      .where('shortId', '==', userId)
+      .get();
+
+    // Initialiser un objet pour stocker les messages groupés par reservationId
+    let groupedMessages = {};
+
+    // Parcourir les documents de réservation pour récupérer les messages
+    reservationsSnapshot.docs.forEach(doc => {
+      const reservationData = doc.data();
+      const reservationId = doc.id; // L'ID de la réservation
+
+      // Vérifier si la réservation contient des messages
+      if (reservationData.messages && Array.isArray(reservationData.messages)) {
+        // Ajouter les messages au groupe basé sur l'ID de la réservation
+        groupedMessages[reservationId] = reservationData.messages;
+      }
+    });
+
+    // Renvoyer les messages groupés par reservationId
+    res.json(groupedMessages);
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    res.status(500).send('Error fetching messages');
+  }
+};
+
+
+
 // Récupérer les messages d'une réservation
 exports.getMessages = async (req, res) => {
     const { reservationId } = req.params;

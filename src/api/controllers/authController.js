@@ -7,7 +7,7 @@ const SibApiV3Sdk = require("sib-api-v3-sdk");
 
 
 const registerUser = async (req, res) => {
-    const { email, password, name, firstName } = req.body;
+    const { email, password, name, firstName, phone } = req.body;
     const { error } = userSchema.validate(req.body);
 
     if (error) {
@@ -40,6 +40,7 @@ const registerUser = async (req, res) => {
             name,
             firstName,
             email,
+            phone,
             role,
             shortId, // Stocke le shortId généré
         });

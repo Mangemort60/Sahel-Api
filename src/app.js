@@ -23,20 +23,15 @@ app.use(
       "https://sahel-admin.web.app",
       "https://sahel-26e16.firebaseapp.com",
       "https://sahel-admin.firebaseapp.com",
-    ], // Ajoutez vos domaines frontend ici
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
 
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", req.headers.origin);
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.send();
-});
+// Traiter les requêtes preflight OPTIONS globalement
+app.options("*", cors());
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

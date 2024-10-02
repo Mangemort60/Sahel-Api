@@ -10,8 +10,8 @@ const upload = multer({
   });
 const router = express.Router();
 
+router.get('/admin/reservations/:reservationId/messages', getMessages);
 router.get('/reservations/:userId/messages', getAllMessages)
-router.get('/reservations/:reservationId/messages', getMessages);
 router.post('/reservations/:reservationId/messages', upload.array('files'), sendMessage);
 router.get('/new-messages', getNewMessages);
 router.put('/reservations/:reservationId/messages/read-by-agent', markMessagesAsReadByAgent);

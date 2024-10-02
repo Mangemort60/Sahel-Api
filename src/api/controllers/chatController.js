@@ -11,6 +11,7 @@ apiKey.apiKey = process.env.SENDINBLUE_KEY || functions.config().sendinblue.key;
 // Remplacez par votre clé API SendInBlue
 
 exports.getAllMessages = async (req, res) => {
+
   const { userId } = req.params;
 
   try {
@@ -46,19 +47,41 @@ exports.getAllMessages = async (req, res) => {
 
 
 // Récupérer les messages d'une réservation
+
 exports.getMessages = async (req, res) => {
-    const { reservationId } = req.params;
-    try {
-      const reservationDoc = await db.collection('reservations').doc(reservationId).get();
-      if (!reservationDoc.exists) {
-        return res.status(404).send('Reservation not found');
-      }
-      const reservationData = reservationDoc.data();
-      return res.status(200).json(reservationData.messages || []);
-    } catch (error) {
-      return res.status(500).send('Error fetching messages: ' + error.message);
+  console.log('getMessages function called'); 
+  const { reservationId } = req.params;
+
+  try {
+    console.log(`Fetching reservation with ID: ${reservationId}`);
+
+    // Récupération du document dans Firestore
+    const reservationDoc = await db.collection('reservations').doc(reservationId).get();
+
+    if (!reservationDoc.exists) {
+      console.log('Reservation not found'); // Ajout du log ici
+      return res.status(404).send('Reservation not found');
     }
-  };
+
+    // Récupérer les données du document
+    const reservationData = reservationDoc.data();
+    console.log('Reservation Data:', reservationData); // Assurez-vous de voir ceci dans les logs
+
+    // Vérifiez la présence du champ messages et sa structure
+    if (reservationData && Array.isArray(reservationData.messages)) {
+      console.log('Messages found:', reservationData.messages);
+      return res.status(200).json(reservationData.messages);  // Renvoie les messages
+    } else {
+      console.log('No messages found for this reservation.');
+      return res.status(200).json([]);  // Renvoie un tableau vide si pas de messages
+    }
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    return res.status(500).send('Error fetching messages: ' + error.message);
+  }
+};
+
+
   
 // Envoyer un nouveau message avec pièces jointes
 exports.sendMessage = async (req, res) => {

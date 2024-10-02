@@ -10,10 +10,11 @@ const client = SibApiV3Sdk.ApiClient.instance;
 const apiKey = client.authentications["api-key"];
 apiKey.apiKey = process.env.SENDINBLUE_KEY || functions.config().sendinblue.key;
 
-const {admin} = require("./firebaseFunctionsConfig");
+const {admin, db} = require("./firebaseFunctionsConfig");
 const {logger} = require("firebase-functions");
-
+const stripe = require("stripe")(functions.config().stripe.secret);
 const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
 
 const formatSizeRange = (sizeRange) => {
   switch (sizeRange) {
@@ -321,5 +322,114 @@ exports.sendEmailOnKeyReceived = functions.firestore
         }, (error) => {
           console.error("Failed to send email:", error);
         });
+      }
+    });
+
+
+exports.handleSmallRepairsPayments = functions.firestore
+    .document("reservations/{reservationId}")
+    .onUpdate(async (change) => {
+      const previousValue = change.before.data();
+      const newValue = change.after.data();
+
+      const {email, name, shortId, reservationType, finalQuote} = newValue;
+
+      // Vérifie si c'est une réservation de "petits-travaux"
+      if (reservationType !== "petits-travaux") return;
+
+      try {
+        // Récupère ou crée un client Stripe
+        const usersRef = db.collection("users");
+        const queryRef = await usersRef.where("shortId", "==", shortId).get();
+        let customerId;
+
+        if (!queryRef.empty) {
+          const userDoc = queryRef.docs[0];
+          const userData = userDoc.data();
+          customerId = userData.stripeCustomerId;
+
+          if (!customerId) {
+            const customer = await stripe.customers.create({
+              email,
+              name,
+              metadata: {shortId},
+            });
+            await userDoc.ref.set({stripeCustomerId: customer.id}, {merge: true});
+            customerId = customer.id;
+          }
+        }
+
+        // 1. Si le statut passe à "confirmé" => créer un PaymentIntent pour les frais de service
+        if (
+          previousValue.bookingStatus !== "confirmé" &&
+          newValue.bookingStatus === "confirmé"
+        ) {
+          const serviceFee = 5000; // Frais de service fixes (par exemple, 50,00€)
+          const paymentIntent = await stripe.paymentIntents.create({
+            amount: serviceFee, // Montant des frais de service en centimes
+            currency: "eur",
+            customer: customerId,
+            receipt_email: email,
+            payment_method_types: ["card"],
+          });
+
+          // Met à jour Firestore avec le client secret pour les frais de service
+          await change.after.ref.update({
+            paymentStatus: "en attente du paiement des frais de service",
+            initialClientSecret: paymentIntent.client_secret,
+          });
+          console.log("Payment intent créé pour les frais de service.");
+        }
+
+        // 2. Si le paiement des frais de service est confirmé => mise à jour des statuts
+        if (
+          previousValue.paymentStatus === "en attente du paiement des frais de service" &&
+          newValue.paymentStatus === "frais de service payés"
+        ) {
+          await change.after.ref.update({
+            serviceStatus: "en attente de réception des clés",
+          });
+          console.log("Frais de service payés et mise à jour du serviceStatus.");
+        }
+
+        // 3. Si le devis est accepté => créer un PaymentIntent pour le devis final
+        if (
+          previousValue.bookingStatus !== "devis accepté" &&
+          newValue.bookingStatus === "devis accepté"
+        ) {
+          // Vérifie si le devis final est bien défini dans la base de données
+          if (!finalQuote) {
+            throw new Error("Le montant du devis final (finalQuote) est manquant.");
+          }
+
+          const paymentIntent = await stripe.paymentIntents.create({
+            amount: finalQuote * 100, // Montant du devis en centimes
+            currency: "eur",
+            customer: customerId,
+            receipt_email: email,
+            payment_method_types: ["card"],
+          });
+
+          // Met à jour Firestore avec le client secret pour le devis final
+          await change.after.ref.update({
+            paymentStatus: "en attente du paiement du devis",
+            finalClientSecret: paymentIntent.client_secret,
+          });
+          console.log("Payment intent créé pour le devis final.");
+        }
+
+        // 4. Si le devis est payé => mise à jour des statuts
+        if (
+          previousValue.paymentStatus === "en attente du paiement du devis" &&
+          newValue.paymentStatus === "devis payé"
+        ) {
+          await change.after.ref.update({
+            serviceStatus: "travaux en cours",
+            bookingStatus: "payé",
+          });
+          console.log("Devis payé, service en cours.");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la gestion des paiements :", error);
       }
     });

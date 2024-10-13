@@ -41,7 +41,6 @@ app.use("/auth", authRoutes);
 app.use("/", quoteRoutes);
 app.use("/", reservationRoutes);
 app.use("/", paymentRoutes);
-app.use("/auth", authRoutes);
 app.use("/", chatRoutes);
 app.use("/", contactRoutes);
 

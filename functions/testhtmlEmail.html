@@ -1,0 +1,364 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html dir="ltr" lang="fr">
+  <head>
+    <link
+      rel="preload"
+      as="image"
+      href="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2FLogo-2-copie.png?alt=media&token=da1022cf-4416-4e78-8318-f053c25ee650"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2Ffacebook.png?alt=media&token=cced8556-fc99-43a9-84c3-1f8da769947a"
+    />
+    <link
+      rel="preload"
+      as="image"
+      href="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2Flinkedin.png?alt=media&token=1aa05e17-3146-4726-9981-3bdc5636224c"
+    />
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <!--$-->
+  </head>
+  <body
+    style="background-color:#ffffff;margin:0 auto;font-family:-apple-system, BlinkMacSystemFont, &#x27;Segoe UI&#x27;, &#x27;Roboto&#x27;, &#x27;Oxygen&#x27;, &#x27;Ubuntu&#x27;, &#x27;Cantarell&#x27;, &#x27;Fira Sans&#x27;, &#x27;Droid Sans&#x27;, &#x27;Helvetica Neue&#x27;, sans-serif"
+  >
+    <table
+      align="center"
+      width="100%"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      role="presentation"
+      style="max-width: 37.5em; margin: 0 auto; padding: 0px 20px"
+    >
+      <tbody>
+        <tr style="width: 100%">
+          <td>
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="margin-top: 32px"
+            >
+              <tbody>
+                <tr>
+                  <td>
+                    <a href="https://sahel-26e16.web.app/">
+                      <img
+                        alt="sahel"
+                        width="224px"
+                        hei
+                        src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2FLogo-2-copie.png?alt=media&token=da1022cf-4416-4e78-8318-f053c25ee650"
+                        style="
+                          display: block;
+                          outline: none;
+                          border: none;
+                          text-decoration: none;
+                          margin: auto;
+                        "
+                      />
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <h1
+              style="
+                color: #1d1c1d;
+                font-size: 36px;
+                font-weight: 700;
+                margin: 30px 0;
+                padding: 0;
+                line-height: 42px;
+              "
+            >
+              Réservation confirmée
+            </h1>
+            <p
+              style="
+                font-size: 16px;
+                line-height: 28px;
+                margin: 16px 0;
+                margin-bottom: 30px;
+              "
+            >
+              Bonjour ${reservationData.firstName}, <br />
+              Merci pour votre réservation avec Sahel ! <br />
+              Votre réservation pour le
+              <span style="font-weight: 700"
+                >${reservationData.serviceDate}</span
+              >
+              a été confirmée.
+            </p>
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="
+                background: rgb(245, 244, 245);
+                border-radius: 4px;
+                margin-bottom: 30px;
+                padding: 10px 10px;
+              "
+            >
+              <tbody>
+                <tr>
+                  <td
+                    colspan="2"
+                    style="
+                      font-size: large;
+                      font-weight: bold;
+                      padding-bottom: 15px;
+                      text-align: left;
+                    "
+                  >
+                    Détails de votre réservation
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style="
+                      padding: 10px 15px;
+                      width: 50%;
+                      text-align: left;
+                      font-weight: bold;
+                    "
+                  >
+                    Nombre d'étages :
+                  </td>
+                  <td
+                    style="
+                      padding: 10px 15px;
+                      width: 50%;
+                      text-align: left;
+                      font-weight: 200;
+                    "
+                  >
+                    ${reservationData.numberOfFloors}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style="
+                      padding: 10px 15px;
+                      width: 40%;
+                      text-align: left;
+                      font-weight: bold;
+                    "
+                  >
+                    Surface :
+                  </td>
+                  <td
+                    style="
+                      padding: 10px 15px;
+                      width: 60%;
+                      text-align: left;
+                      font-weight: 200;
+                    "
+                  >
+                    ${formatSizeRange(reservationData.sizeRange)}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style="
+                      padding: 10px 15px;
+                      width: 40%;
+                      text-align: left;
+                      font-weight: bold;
+                    "
+                  >
+                    Le nettoyage sera fait : ${reservationData.beforeOrAfter ===
+                    "after" ? "après" : "avant"} votre arrivée
+                  </td>
+                  <td
+                    style="
+                      padding: 10px 15px;
+                      width: 60%;
+                      text-align: left;
+                      font-weight: 200;
+                    "
+                  ></td>
+                </tr>
+                <tr>
+                  <td
+                    style="
+                      padding: 10px 15px;
+                      width: 40%;
+                      text-align: left;
+                      font-weight: bold;
+                    "
+                  >
+                    Lieu de la prestation :
+                  </td>
+                  <td
+                    style="
+                      padding: 10px 15px;
+                      width: 60%;
+                      text-align: left;
+                      font-weight: 200;
+                    "
+                  >
+                    ${reservationData.adress}
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="2"
+                    style="
+                      padding: 15px 0;
+                      font-size: medium;
+                      font-weight: 500;
+                      text-align: left;
+                    "
+                  >
+                    Montant total de la prestation :
+                    <span style="font-weight: 700"
+                      >${reservationData.quote} €</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+            >
+              <tbody>
+                <tr>
+                  <td>
+                    <table
+                      align="center"
+                      width="100%"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      role="presentation"
+                      style="
+                        margin-bottom: 32px;
+                        padding-left: 8px;
+                        padding-right: 8px;
+                        width: 100%;
+                      "
+                    >
+                      <tbody style="width: 100%">
+                        <tr style="width: 100%">
+                          <td data-id="__react-email-column" style="width: 66%">
+                            <a href="https://sahel-26e16.web.app/">
+                              <img
+                                alt="Slack"
+                                width="128px"
+                                src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2FLogo-2-copie.png?alt=media&token=da1022cf-4416-4e78-8318-f053c25ee650"
+                                style="
+                                  display: block;
+                                  outline: none;
+                                  border: none;
+                                  text-decoration: none;
+                                "
+                              />
+                            </a>
+                          </td>
+                          <td data-id="__react-email-column">
+                            <table
+                              align="center"
+                              width="100%"
+                              border="0"
+                              cellpadding="0"
+                              cellspacing="0"
+                              role="presentation"
+                            >
+                              <tbody>
+                                <tr>
+                                  <td>
+                                    <table
+                                      align="center"
+                                      width="50%"
+                                      border="0"
+                                      cellpadding="0"
+                                      cellspacing="0"
+                                      role="presentation"
+                                    >
+                                      <tbody style="width: 50%">
+                                        <tr style="width: 50%">
+                                          <td data-id="__react-email-column">
+                                            <a
+                                              href="/"
+                                              style="
+                                                color: #067df7;
+                                                text-decoration: none;
+                                              "
+                                              target="_blank"
+                                              ><img
+                                                alt="facebook"
+                                                height="32"
+                                                src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2Ffacebook.png?alt=media&token=cced8556-fc99-43a9-84c3-1f8da769947a"
+                                                style="
+                                                  display: inline;
+                                                  outline: none;
+                                                  border: none;
+                                                  text-decoration: none;
+                                                "
+                                            /></a>
+                                          </td>
+                                          <td data-id="__react-email-column">
+                                            <a
+                                              href="/"
+                                              style="
+                                                color: #067df7;
+                                                text-decoration: none;
+                                              "
+                                              target="_blank"
+                                              ><img
+                                                alt="Linkedin"
+                                                height="32"
+                                                src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2Flinkedin.png?alt=media&token=1aa05e17-3146-4726-9981-3bdc5636224c"
+                                                style="
+                                                  display: inline;
+                                                  outline: none;
+                                                  border: none;
+                                                  text-decoration: none;
+                                                "
+                                            /></a>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table
+              align="center"
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+            ></table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!--/$-->
+  </body>
+</html>

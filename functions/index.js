@@ -50,73 +50,241 @@ exports.sendEmailConfirmation = functions.firestore
       sendSmtpEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
       sendSmtpEmail.to = [{ email: reservationData.email }];
       sendSmtpEmail.subject = "Confirmation de votre réservation";
-      sendSmtpEmail.htmlContent = `<html lang="fr">
-        <head>
-        <meta charset="UTF-8">
-        <title>Confirmation de Réservation</title>
-        <style>
-            body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; }
-            table { width: 100%; max-width: 600px; margin: auto; background-color: white; }
-            .header { background-color: #ac5f40; color: white; padding: 10px; text-align: center; }
-            .content { padding: 20px; }
-            img { margin-bottom: 10px; }
-            p { color: #666666; margin-top: 10px; margin-bottom: 10px; }
-            .info { margin-bottom: 5px; }
-            .bold { font-weight: bold; }
-            .container { display: flex; flex-direction: column; align-items: center;}
+      sendSmtpEmail.htmlContent = `<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+
+<head>
+  <title> Confirmation de Réservation </title>
+  <!--[if !mso]><!-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!--<![endif]-->
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style type="text/css">
+    #outlook a {
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
+    table,
+    td {
+      border-collapse: collapse;
+      mso-table-lspace: 0pt;
+      mso-table-rspace: 0pt;
+    }
+
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+
+    p {
+      display: block;
+      margin: 13px 0;
+    }
+  </style>
+  <!--[if mso]>
+        <noscript>
+        <xml>
+        <o:OfficeDocumentSettings>
+          <o:AllowPNG/>
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+        </xml>
+        </noscript>
+        <![endif]-->
+  <!--[if lte mso 11]>
+        <style type="text/css">
+          .mj-outlook-group-fix { width:100% !important; }
         </style>
-        </head>
-        <body>
-            <div class="container">
-                <div><img src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2FLogo-2-copie.webp?alt=media&token=680b09ce-3ff0-4780-b99a-52b4edda2c1f" width="200" alt="Logo Sahel"></div>
-                <table border="0" cellpadding="0" cellspacing="0">
+        <![endif]-->
+  <!--[if !mso]><!-->
+  <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700" rel="stylesheet" type="text/css">
+  <style type="text/css">
+    @import url(https://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700);
+  </style>
+  <!--<![endif]-->
+  <style type="text/css">
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    }
+  </style>
+  <style media="screen and (min-width:480px)">
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+  </style>
+  <style type="text/css">
+    @media only screen and (max-width:480px) {
+      table.mj-full-width-mobile {
+        width: 100% !important;
+      }
+
+      td.mj-full-width-mobile {
+        width: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body style="word-spacing:normal;background-color:#ffffff;">
+  <div style="display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;"> Votre réservation est confirmée </div>
+  <div style="background-color:#ffffff;">
+    <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" bgcolor="#ffffff" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#ffffff;background-color:#ffffff;margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;background-color:#ffffff;width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:10px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:580px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
                     <tr>
-                        <td class="header">
-                            <h1>Confirmation de Réservation</h1>
-                        </td>
+                      <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
+                          <tbody>
+                            <tr>
+                              <td style="width:200px;">
+                                <a href="https://sahel-26e16.web.app/" target="_blank">
+                                  <img alt="sahel logo" height="auto" src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2FLogo-2-copie.png?alt=media&token=da1022cf-4416-4e78-8318-f053c25ee650" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="200" />
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
                     </tr>
                     <tr>
-                        <td class="content">
-                            <p>Bonjour ${reservationData.firstName},</p>
-                            <p>Votre réservation pour le <span class="bold">${
-                              reservationData.serviceDate
-                            }</span> a été confirmée. Voici les détails de votre réservation :</p>
-                            <p class="info"><span class="bold">Nombre d'étages :</span> ${
-                              reservationData.formData.numberOfFloors
-                            }</p>
-                            <p class="info"><span class="bold">Surface :</span> ${formatSizeRange(
-                              reservationData.formData.sizeRange
-                            )}</p>
-                            <p class="info"><span class="bold">Panier de fruits :</span> ${
-                              reservationData.formData.fruitBasketSelected
-                                ? "oui"
-                                : "non"
-                            }</p>
-                            <p class="info"><span class="bold">Le nettoyage sera fait ${
-                              reservationData.formData.beforeOrAfter ===
-                              "before"
-                                ? "avant"
-                                : "après"
-                            } votre arrivée</p>
-                            <p class="info"><span class="bold">Adresse de la prestation :</span> ${
-                              reservationData.bookingFormData.address
-                            } - ${reservationData.bookingFormData.city}</p>
-                            ${
-                              reservationData.bookingFormData
-                                .specialInstructions
-                                ? `<p class="info"><span class="bold">Instructions spéciales :</span> ${reservationData.bookingFormData.specialInstructions}</p>`
-                                : ""
-                            }
-                            <p class="info"><span class="bold">TOTAL TTC :</span> ${
-                              reservationData.quote
-                            }€</p>
-                        </td>
+                      <td align="center" style="font-size:0px;padding:20px 0 10px 0;word-break:break-word;">
+                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:24px;font-weight:bold;line-height:1;text-align:center;color:#1d1c1d;">Réservation confirmée</div>
+                      </td>
                     </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:10px;word-break:break-word;">
+                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1.5;text-align:left;color:#666666;">Bonjour ${reservationData.firstName},<br /> Merci pour votre réservation avec Sahel ! <br /> Votre réservation pour le <strong>${reservationData.serviceDate}</strong> a été confirmée.</div>
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
-            </div>
-        </body>
-        </html>
-        `;
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" bgcolor="#f5f4f5" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#f5f4f5;background-color:#f5f4f5;margin:0px auto;border-radius:8px;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#f5f4f5;background-color:#f5f4f5;width:100%;border-radius:8px;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:10px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:580px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:10px 0;word-break:break-word;">
+                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:18px;font-weight:bold;line-height:1;text-align:left;color:#000000;">Détails de votre réservation</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:5px 0;word-break:break-word;">
+                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1.5;text-align:left;color:#666666;"><strong>Nombre d'étages :</strong> ${reservationData.numberOfFloors}<br />
+                          <strong>Surface :</strong> ${formatSizeRange(reservationData.sizeRange)}<br />
+                          <strong>Le nettoyage sera fait :</strong> ${reservationData.beforeOrAfter === "after" ? "après" : "avant"} votre arrivée<br />
+                          <strong>Lieu de la prestation :</strong> ${reservationData.address}<br />
+                          <strong>Montant total de la prestation :</strong> <span style="font-weight:700;">${reservationData.quote} €</span>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+    <!-- Section pour les logos sociaux -->
+    <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="margin:0px auto;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:ltr;font-size:0px;padding:10px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:580px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                        <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" ><tr><td><![endif]-->
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
+                          <tr>
+                            <td style="padding:4px;vertical-align:middle;">
+                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#3b5998;border-radius:3px;width:30px;">
+                                <tr>
+                                  <td style="font-size:0;height:30px;vertical-align:middle;width:30px;">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://mjml.io/" target="_blank">
+                                      <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/facebook.png" style="border-radius:3px;display:block;" width="30" />
+                                    </a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                        <!--[if mso | IE]></td><td><![endif]-->
+                        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="float:none;display:inline-table;">
+                          <tr>
+                            <td style="padding:4px;vertical-align:middle;">
+                              <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#0077b5;border-radius:3px;width:30px;">
+                                <tr>
+                                  <td style="font-size:0;height:30px;vertical-align:middle;width:30px;">
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://linkedin.com&title=&summary=&source=" target="_blank">
+                                      <img height="30" src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2Flinkedin.png?alt=media&token=1aa05e17-3146-4726-9981-3bdc5636224c" style="border-radius:3px;display:block;" width="30" />
+                                    </a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                        <!--[if mso | IE]></td></tr></table><![endif]-->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+  </div>
+</body>
+
+</html>`;
 
       try {
         console.log(`Sending confirmation email to: ${reservationData.email}`);
@@ -145,11 +313,11 @@ exports.sendEmailConfirmation = functions.firestore
 
     // Envoyer l'email d'instructions pour les clés si applicable et pas déjà envoyé
     if (
-      reservationData.formData.beforeOrAfter === "before" &&
+      reservationData.beforeOrAfter === "before" &&
       !reservationData.emails.instructionsKeysEmailSent
     ) {
       const sendKeysEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendKeysEmail.sender = { email: "sahel@example.com", name: "Sahel" };
+      sendKeysEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
       sendKeysEmail.to = [{ email: reservationData.email }];
       sendKeysEmail.subject = "Instructions pour la remise des clés";
       sendKeysEmail.htmlContent = `<html lang="fr">
@@ -170,7 +338,7 @@ exports.sendEmailConfirmation = functions.firestore
         </head>
         <body>
             <div class="container">
-                <div><img src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2FLogo-2-copie.webp?alt=media&token=680b09ce-3ff0-4780-b99a-52b4edda2c1f" width="200" alt="Logo Sahel"></div>
+                <div><img src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2FLogo-2-copie.png?alt=media&token=da1022cf-4416-4e78-8318-f053c25ee650" width="200" alt="Logo Sahel"></div>
                 <table border="0" cellpadding="0" cellspacing="0">
                     <tr>
                         <td class="header">
@@ -211,7 +379,7 @@ exports.sendEmailConfirmation = functions.firestore
       } catch (error) {
         console.error("Failed to send keys instructions email:", error);
       }
-    } else if (reservationData.formData.beforeOrAfter === "before") {
+    } else {
       console.log(
         `Keys instructions email already sent for reservationId: ${reservationId}`
       );
@@ -219,12 +387,12 @@ exports.sendEmailConfirmation = functions.firestore
 
     // Envoyer l'email d'instructions par défaut si applicable et pas déjà envoyé
     if (
-      reservationData.formData.beforeOrAfter !== "before" &&
+      reservationData.beforeOrAfter !== "before" &&
       !reservationData.emails.defaultInstructionsEmailSent
     ) {
       const sendDefaultInstructionsEmail = new SibApiV3Sdk.SendSmtpEmail();
       sendDefaultInstructionsEmail.sender = {
-        email: "sahel@example.com",
+        email: "hahaddaoui@gmail.com",
         name: "Sahel",
       };
       sendDefaultInstructionsEmail.to = [{ email: reservationData.email }];
@@ -247,7 +415,7 @@ exports.sendEmailConfirmation = functions.firestore
         </head>
         <body>
             <div class="container">
-                <div><img src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2FLogo-2-copie.webp?alt=media&token=680b09ce-3ff0-4780-b99a-52b4edda2c1f" width="200" alt="Logo Sahel"></div>
+                <div><img src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2FLogo-2-copie.png?alt=media&token=da1022cf-4416-4e78-8318-f053c25ee650" width="200" alt="Logo Sahel"></div>
                 <table border="0" cellpadding="0" cellspacing="0">
                     <tr>
                         <td class="header">
@@ -288,9 +456,9 @@ exports.sendEmailConfirmation = functions.firestore
       } catch (error) {
         console.error("Failed to send default instructions email:", error);
       }
-    } else if (reservationData.formData.beforeOrAfter !== "before") {
+    } else {
       console.log(
-        `Default instructions email already sent for reservationId: ${reservationId}`
+        `Keys instructions email already sent or not applicable for reservationId: ${reservationId}`
       );
     }
   });
@@ -411,109 +579,6 @@ exports.sendEmailOnKeyReceived = functions.firestore
         });
     }
   });
-
-// exports.handleSmallRepairsPayments = functions.firestore
-//   .document("reservations/{reservationId}")
-//   .onUpdate(async (change) => {
-//     const previousValue = change.before.data();
-//     const newValue = change.after.data();
-
-//     const { email, name, shortId, reservationType } = newValue;
-
-//     // Vérifie si c'est une réservation de "petits-travaux"
-//     if (reservationType !== "petits-travaux") return;
-
-//     try {
-//       // Récupère ou crée un client Stripe
-//       const usersRef = db.collection("users");
-//       const queryRef = await usersRef.where("shortId", "==", shortId).get();
-//       let customerId;
-
-//       if (!queryRef.empty) {
-//         const userDoc = queryRef.docs[0];
-//         const userData = userDoc.data();
-//         customerId = userData.stripeCustomerId;
-
-//         if (!customerId) {
-//           const customer = await stripe.customers.create({
-//             email,
-//             name,
-//             metadata: { shortId },
-//           });
-//           await userDoc.ref.set(
-//             { stripeCustomerId: customer.id },
-//             { merge: true }
-//           );
-//           customerId = customer.id;
-//         }
-//       }
-
-//       // 1. Si le statut passe à "confirmé" => créer un PaymentIntent pour les frais de service
-//       if (
-//         previousValue.bookingStatus !== "confirmé" &&
-//         newValue.bookingStatus === "confirmé"
-//       ) {
-//         const serviceFee = 5000; // Frais de service fixes (par exemple, 50,00€)
-//         const paymentIntent = await stripe.paymentIntents.create({
-//           amount: serviceFee, // Montant des frais de service en centimes
-//           currency: "eur",
-//           customer: customerId,
-//           receipt_email: email,
-//           payment_method_types: ["card"],
-//         });
-
-//         // Met à jour Firestore avec le client secret pour les frais de service
-//         await change.after.ref.update({
-//           paymentStatus: "en attente du paiement des frais de service",
-//           initialClientSecret: paymentIntent.client_secret,
-//         });
-//         console.log("Payment intent créé pour les frais de service.");
-//       }
-
-//       // 2. Si le paiement des frais de service est confirmé => mise à jour des statuts
-//       if (
-//         previousValue.paymentStatus ===
-//           "en attente du paiement des frais de service" &&
-//         newValue.paymentStatus === "frais de service payés"
-//       ) {
-//         await change.after.ref.update({
-//           serviceStatus: "en attente de réception des clés",
-//         });
-//         console.log("Frais de service payés et mise à jour du serviceStatus.");
-//       }
-//     } catch (error) {
-//       console.error("Erreur lors de la gestion des paiements :", error);
-//     }
-//   });
-
-// exports.createPaymentIntentOnQuoteSent = functions.firestore
-//   .document("reservations/{reservationId}/devis/{devisId}")
-//   .onCreate(async (snap, context) => {
-//     const devis = snap.data();
-//     const reservationId = context.params.reservationId;
-//     const devisId = context.params.devisId;
-
-//     try {
-//       // Créer un PaymentIntent avec Stripe
-//       const paymentIntent = await stripe.paymentIntents.create({
-//         amount: devis.amount * 100, // Montant en centimes
-//         currency: "eur",
-//         receipt_email: devis.email,
-//         payment_method_types: ["card"],
-//       });
-
-//       // Mettre à jour le devis avec le clientSecret du PaymentIntent
-//       await admin
-//         .firestore()
-//         .doc(`reservations/${reservationId}/devis/${devisId}`)
-//         .update({
-//           clientSecret: paymentIntent.client_secret,
-//           paymentStatus: "en attente de paiement",
-//         });
-//     } catch (error) {
-//       console.error("Erreur lors de la création du PaymentIntent:", error);
-//     }
-//   });
 
 // Fonction pour gérer les mises à jour du paiement (payé ou refusé)
 exports.handlePaymentStatusAndServiceFee = functions.firestore

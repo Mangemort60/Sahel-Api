@@ -12,6 +12,14 @@ const sendServiceFeePaymentRequestEmail = functions.firestore
     const reservationData = change.after.data();
     const reservationId = context.params.reservationId;
 
+    // Vérifiez si l'email a déjà été envoyé en utilisant le champ `serviceFeeEmailSent`
+    if (reservationData.serviceFeeEmailSent) {
+      console.log(
+        `Service fee payment request email already sent for reservationId: ${reservationId}`
+      );
+      return; // Sortie de la fonction si l'email a déjà été envoyé
+    }
+
     // Vérifier si le bookingStatus et paymentStatus sont corrects
     if (
       reservationData.bookingStatus === "confirmé" &&
@@ -285,6 +293,11 @@ const sendServiceFeePaymentRequestEmail = functions.firestore
         );
         await apiInstance.sendTransacEmail(sendSmtpEmail);
         console.log("Service fee payment request email sent successfully");
+
+        // Mettre à jour le champ pour marquer l'email comme envoyé
+        await change.after.ref.update({
+          serviceFeeEmailSent: true,
+        });
       } catch (error) {
         console.error(
           "Failed to send service fee payment request email:",

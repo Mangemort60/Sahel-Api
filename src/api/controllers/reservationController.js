@@ -163,6 +163,17 @@ const createPreDemand = async (req, res) => {
         confirmationEmailSent: false,
         instructionsKeysEmailSent: false,
         defaultInstructionsEmailSent: false,
+        serviceFeeConfirmationEmailSent: false,
+        preRequestEmailSent: false,
+      },
+      serviceFeeInfo: {
+        amount: 100,
+        viewedByClient: false,
+        status: "",
+      },
+      serviceDate: {
+        startDate: null,
+        endDate: null,
       },
       shortId: shortId,
       paymentStatus: "aucun paiement requis pour le moment",

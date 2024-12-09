@@ -20,6 +20,7 @@ const handlePaymentStatusAndServiceFee = functions.firestore
         // Mettre à jour le statut de paiement à "en attente de paiement des frais de service"
         await admin.firestore().doc(`reservations/${reservationId}`).update({
           paymentStatus: "en attente de paiement des frais de service",
+          "serviceFeeInfo.status": "pending",
         });
         console.log(
           `Statut de paiement mis à jour pour la réservation ${reservationId} : en attente de paiement des frais de service.`

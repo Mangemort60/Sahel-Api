@@ -8,6 +8,7 @@ const paymentRoutes = require("./api/routes/paymentRoutes");
 const reservationRoutes = require("./api/routes/reservationRoutes");
 const chatRoutes = require("./api/routes/chatRoutes");
 const contactRoutes = require("./api/routes/contactRoutes");
+const notificationsController = require("./api/routes/notificationsRoutes");
 const helmet = require("helmet");
 
 app.use(helmet());
@@ -43,5 +44,6 @@ app.use("/", reservationRoutes);
 app.use("/", paymentRoutes);
 app.use("/", chatRoutes);
 app.use("/", contactRoutes);
+app.use("/", notificationsController);
 
 module.exports = app;

@@ -188,7 +188,7 @@ const sendEmailOnKeyReceived = functions.firestore
                   <tbody>
                     <tr>
                       <td align="left" style="font-size:0px;padding:20px;word-break:break-word;">
-                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1.5;text-align:left;color:#666666;">Bonjour ${newValue.firstName}, <br /><br /> Nous vous confirmons la bonne réception de vos clés pour votre prestation de <strong>${newValue.reservationType}</strong> prévue le <strong>${newValue.serviceDate}</strong>. <br /><br /> Nous nous assurerons que vos clés sont conservées en toute sécurité jusqu'à la date de la prestation. N'hésitez pas à nous contacter si vous avez des questions ou des instructions supplémentaires. <br /><br /> Cordialement, <br /> L'équipe Sahel</div>
+                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1.5;text-align:left;color:#666666;">Bonjour ${newValue.firstName}, <br /><br /> Nous vous confirmons la bonne réception de vos clés pour votre prestation de <strong>${newValue.reservationType}</strong>.<br /><br /> Nous nous assurerons que vos clés sont conservées en toute sécurité jusqu'à la date de la prestation. N'hésitez pas à nous contacter si vous avez des questions ou des instructions supplémentaires. <br /><br /> Cordialement, <br /> L'équipe Sahel</div>
                       </td>
                     </tr>
                   </tbody>

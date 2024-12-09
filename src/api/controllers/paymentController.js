@@ -134,6 +134,7 @@ exports.verifyPayment = async (req, res) => {
         );
         await reservationRef.update({
           paymentStatus: "frais de service payés",
+          "serviceFeeInfo.status": "paid", // Mise à jour du statut
         });
         return res.json({
           success: true,
@@ -251,6 +252,8 @@ exports.verifyPayment = async (req, res) => {
         confirmationEmailSent: false,
         instructionsKeysEmailSent: false,
         defaultInstructionsEmailSent: false,
+        serviceFeeConfirmationEmailSent: false,
+        preRequestEmailSent: false,
       },
       chatStatus: true,
       reservationShortId: reservationShortId,

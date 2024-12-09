@@ -11,6 +11,9 @@ const {
   sendEmailOnServiceCompletion,
   sendEmailPreRequestConfirmation,
   sendServiceFeePaymentRequestEmail,
+  sendConfirmationAndInstructionsEmails,
+  sendEmailEstimateReadyForPayment,
+  sendEmailConfirmationPayment,
 } = require("./emails");
 const {
   updateReservationStatus,
@@ -33,6 +36,13 @@ exports.sendEmailPreRequestConfirmation = sendEmailPreRequestConfirmation;
 exports.sendEmailOnKeyReceived = sendEmailOnKeyReceived;
 // Envoi email demande paiement des frais de service
 exports.sendServiceFeePaymentRequestEmail = sendServiceFeePaymentRequestEmail;
+// Envoi email confirmer paiement frais de service et instructions clés
+exports.sendConfirmationAndInstructionsEmails =
+  sendConfirmationAndInstructionsEmails;
+// Envoi email confirmer paiement devis
+exports.sendEmailConfirmationPayment = sendEmailConfirmationPayment;
+// Envoi email devis disponible et demande paiement
+exports.sendEmailEstimateReadyForPayment = sendEmailEstimateReadyForPayment;
 // passe le statut de la réservation "à venir" à "en cours " le jour de la préstation
 exports.updateReservationStatus = updateReservationStatus;
 // Fonction pour gérer les mises à jour du paiement (payé ou refusé)

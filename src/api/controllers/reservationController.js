@@ -123,21 +123,13 @@ const getReservationsByUser = async (req, res) => {
 };
 
 const createPreDemand = async (req, res) => {
-  const { reservationData, shortId, email, userFirstName, userName, phone } =
-    req.body;
+  const { reservationData, shortId, email, userFirstName, userName } = req.body;
 
   console.log("USERFIRSTNAME ", userFirstName, "userName", userName);
 
   try {
     // 1. Vérifier que les données nécessaires sont présentes
-    if (
-      !reservationData ||
-      !shortId ||
-      !email ||
-      !userFirstName ||
-      !userName ||
-      !phone
-    ) {
+    if (!reservationData || !shortId || !email || !userFirstName || !userName) {
       return res.status(400).json({
         success: false,
         message: "Données de réservation manquantes ou invalides.",
@@ -157,7 +149,6 @@ const createPreDemand = async (req, res) => {
     // 4. Créer la nouvelle pré-demande (réservation)
     const newPreDemand = {
       ...reservationData,
-      phone: phone,
       bookingStatus: "pré-demande",
       reservationType: "petits-travaux", // Statut indiquant que c'est une pré-demande
       createdAt: new Date(), // Date de création de la pré-demande

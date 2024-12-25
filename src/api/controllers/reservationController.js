@@ -65,13 +65,17 @@ const getReservationsByUser = async (req, res) => {
   try {
     const shortID = req.query.shortID;
     const reservationType = req.query.reservationType || ""; // Optionnel, par défaut vide
-    console.log("shortID:", shortID);
+    console.log(
+      "Requête reçue pour shortID:",
+      shortID,
+      "et type:",
+      reservationType
+    );
 
     if (!shortID) {
       return res.status(400).json({ error: "ID utilisateur non disponible." });
     }
 
-    const reservations = [];
     let queryRef = db
       .collection("reservations")
       .where("shortId", "==", shortID);
@@ -84,35 +88,33 @@ const getReservationsByUser = async (req, res) => {
     const snapshot = await queryRef.get();
 
     if (snapshot.empty) {
-      return res
-        .status(404)
-        .json({ error: "Aucune réservation trouvée pour cet utilisateur." });
+      // Retourner un tableau vide au lieu d'un 404
+      return res.status(200).json([]);
     }
 
-    for (const doc of snapshot.docs) {
-      let reservation = { id: doc.id, ...doc.data() };
+    const reservations = await Promise.all(
+      snapshot.docs.map(async (doc) => {
+        const reservation = { id: doc.id, ...doc.data() };
 
-      // Récupérer la sous-collection 'devis' pour chaque réservation
-      const devisCollectionRef = db
-        .collection("reservations")
-        .doc(doc.id)
-        .collection("devis");
-      const devisSnapshot = await devisCollectionRef.get();
+        // Récupérer la sous-collection 'devis' pour cette réservation
+        const devisCollectionRef = db
+          .collection("reservations")
+          .doc(doc.id)
+          .collection("devis");
 
-      // Récupérer les devis sous forme de tableau
-      const devisArray = [];
-      devisSnapshot.forEach((devisDoc) => {
-        devisArray.push({ id: devisDoc.id, ...devisDoc.data() });
-      });
+        const devisSnapshot = await devisCollectionRef.get();
 
-      // Ajouter les devis à l'objet réservation
-      reservation.devis = devisArray;
+        // Ajouter les devis à l'objet réservation
+        reservation.devis = devisSnapshot.docs.map((devisDoc) => ({
+          id: devisDoc.id,
+          ...devisDoc.data(),
+        }));
 
-      // Ajouter la réservation (avec les devis) au tableau des réservations
-      reservations.push(reservation);
-    }
+        return reservation;
+      })
+    );
 
-    // Renvoyer la réponse au client
+    // Renvoyer les réservations au frontend
     res.status(200).json(reservations);
   } catch (error) {
     console.error("Erreur lors de la récupération des réservations:", error);
@@ -171,7 +173,7 @@ const createPreDemand = async (req, res) => {
         viewedByClient: false,
         status: "",
       },
-      serviceDate: {
+      serviceDates: {
         startDate: null,
         endDate: null,
       },

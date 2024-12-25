@@ -14,6 +14,7 @@ const {
   sendConfirmationAndInstructionsEmails,
   sendEmailEstimateReadyForPayment,
   sendEmailConfirmationPayment,
+  sendEmailServiceDatesDefined,
 } = require("./emails");
 const {
   updateReservationStatus,
@@ -47,3 +48,5 @@ exports.sendEmailEstimateReadyForPayment = sendEmailEstimateReadyForPayment;
 exports.updateReservationStatus = updateReservationStatus;
 // Fonction pour gérer les mises à jour du paiement (payé ou refusé)
 exports.handlePaymentStatusAndServiceFee = handlePaymentStatusAndServiceFee;
+// Fonction pour envoyer créneau défini pour petits travaux
+exports.sendEmailServiceDatesDefined = sendEmailServiceDatesDefined;

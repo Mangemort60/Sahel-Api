@@ -53,7 +53,16 @@ const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: error.message });
+
+    // Gérer le cas spécifique où l'email existe déjà
+    if (error.code === "auth/email-already-exists") {
+      return res
+        .status(409)
+        .json({ error: "Cette adresse email est déjà utilisée." });
+    }
+
+    // Gérer d'autres erreurs
+    res.status(500).json({ error: "Erreur interne du serveur." });
   }
 };
 

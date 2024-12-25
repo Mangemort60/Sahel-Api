@@ -25,6 +25,9 @@ const {
 const {
   sendServiceFeePaymentRequestEmail,
 } = require("./sendServiceFeePaymentRequestEmail");
+const {
+  sendEmailServiceDatesDefined,
+} = require("./sendEmailServiceDatesDefined");
 
 module.exports = {
   sendEmailConfirmationCleaning,
@@ -38,4 +41,5 @@ module.exports = {
   sendConfirmationAndInstructionsEmails,
   sendEmailEstimateReadyForPayment,
   sendEmailConfirmationPayment,
+  sendEmailServiceDatesDefined,
 };

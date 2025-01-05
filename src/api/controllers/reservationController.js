@@ -1,56 +1,50 @@
 const { db } = require("../../config/firebaseConfig"); // Assurez-vous que ce chemin correspond à votre configuration Firebase
 const reservationSchema = require("../../models/reservationModel");
-const daysjs = require("dayjs");
+const dayjs = require("dayjs");
 
 const getReservedDates = async (req, res) => {
   try {
     const reservationsSnapshot = await db.collection("reservations").get();
 
     if (reservationsSnapshot.empty) {
-      // Renvoie un tableau vide si aucune réservation n'est trouvée
       return res.status(200).json({ cleaning: [], cooking: [] });
     }
 
-    // Initialiser des objets pour stocker les dates réservées pour chaque type de réservation
     const cleaningReservationCounts = {};
     const cookingReservationCounts = {};
 
     reservationsSnapshot.forEach((doc) => {
-      const { serviceDate, reservationType } = doc.data(); // Récupérer le type de réservation
+      const { reservationType, serviceDate, serviceDates, serviceStartDate } =
+        doc.data();
 
+      // Priorité : serviceStartDate (ISO 8601) > serviceDates.startDate > serviceDate
+      const dateToUse =
+        serviceStartDate || serviceDates?.startDate || serviceDate;
+
+      if (!dateToUse) return; // Ignore si aucune date n'est présente
+
+      // Utiliser dayjs pour la normalisation
+      const normalizedDate = dayjs(dateToUse).format("YYYY-MM-DD");
+
+      // Gestion des réservations selon le type
       if (reservationType === "ménage") {
-        // Si la réservation est de type ménage, compter les dates réservées
-        if (cleaningReservationCounts[serviceDate]) {
-          cleaningReservationCounts[serviceDate] += 1;
-        } else {
-          cleaningReservationCounts[serviceDate] = 1;
-        }
+        cleaningReservationCounts[normalizedDate] =
+          (cleaningReservationCounts[normalizedDate] || 0) + 1;
       } else if (reservationType === "cuisine") {
-        // Si la réservation est de type cuisine, compter les dates réservées
-        if (cookingReservationCounts[serviceDate]) {
-          cookingReservationCounts[serviceDate] += 1;
-        } else {
-          cookingReservationCounts[serviceDate] = 1;
-        }
+        cookingReservationCounts[normalizedDate] =
+          (cookingReservationCounts[normalizedDate] || 0) + 1;
       }
     });
 
-    // Convertir les objets en tableaux pour renvoyer les résultats
+    // Conversion des objets en tableaux
     const cleaningReservations = Object.entries(cleaningReservationCounts).map(
-      ([date, count]) => ({
-        date,
-        count,
-      })
+      ([date, count]) => ({ date, count })
     );
 
     const cookingReservations = Object.entries(cookingReservationCounts).map(
-      ([date, count]) => ({
-        date,
-        count,
-      })
+      ([date, count]) => ({ date, count })
     );
 
-    // Renvoyer les dates réservées séparées pour le ménage et la cuisine
     res.status(200).json({
       cleaning: cleaningReservations,
       cooking: cookingReservations,
@@ -177,6 +171,7 @@ const createPreDemand = async (req, res) => {
         startDate: null,
         endDate: null,
       },
+      serviceStartDate: null,
       shortId: shortId,
       paymentStatus: "aucun paiement requis pour le moment",
       email: email,

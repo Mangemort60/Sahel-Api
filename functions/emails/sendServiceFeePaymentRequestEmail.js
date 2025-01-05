@@ -203,7 +203,7 @@ const sendServiceFeePaymentRequestEmail = functions.firestore
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:separate;line-height:100%;">
                           <tr>
                             <td align="center" bgcolor="#007bff" role="presentation" style="border:none;border-radius:5px;cursor:auto;mso-padding-alt:10px 25px;background:#007bff;" valign="middle">
-                              <a href="http://localhost:5173/" style="display:inline-block;background:#007bff;color:#ffffff;font-family:Ubuntu, sans-serif;font-size:16px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:5px;" target="_blank"> Accéder à mon espace client </a>
+                              <a href="https://sahel-26e16.web.app/" style="display:inline-block;background:#007bff;color:#ffffff;font-family:Ubuntu, sans-serif;font-size:16px;font-weight:normal;line-height:120%;margin:0;text-decoration:none;text-transform:none;padding:10px 25px;mso-padding-alt:0px;border-radius:5px;" target="_blank"> Accéder à mon espace client </a>
                             </td>
                           </tr>
                         </table>

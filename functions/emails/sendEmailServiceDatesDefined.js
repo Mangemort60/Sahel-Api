@@ -15,16 +15,13 @@ const sendEmailServiceDatesDefined = functions.firestore
     const reservationData = change.after.data();
     const previousData = change.before.data();
 
-    // Vérifier si les deux dates sont définies et si elles étaient absentes avant
+    // Vérifier si les nouvelles dates sont définies correctement et si elles ont été modifiées
     if (
-      reservationData.serviceDates.startDate &&
+      reservationData.serviceStartDate &&
       reservationData.serviceDates.endDate &&
-      // Si les dates n'étaient pas définies auparavant
-      (!previousData.serviceDates.startDate ||
+      (!previousData.serviceStartDate ||
         !previousData.serviceDates.endDate ||
-        // Si les dates ont été modifiées
-        reservationData.serviceDates.startDate !==
-          previousData.serviceDates.startDate ||
+        reservationData.serviceStartDate !== previousData.serviceStartDate ||
         reservationData.serviceDates.endDate !==
           previousData.serviceDates.endDate)
     ) {
@@ -202,7 +199,7 @@ const sendEmailServiceDatesDefined = functions.firestore
                     <tr>
                       <td align="left" class="content" style="font-family: Ubuntu, Arial, sans-serif; line-height: 1.5; color: #666666; text-align: left; font-size: 0px; padding: 10px 25px; word-break: break-word;">
                         <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1;text-align:left;color:#000000;">Bonjour ${reservationData.firstName || "client"},<br><br> Votre créneau pour la prestation de <strong>${reservationData.reservationType}</strong> a été confirmé.<br> La prestation est prévue entre :<br><br>
-                          <strong>Date de début :</strong> ${reservationData.serviceDates.startDate}<br>
+                          <strong>Date de début :</strong> ${reservationData.serviceStartDate}<br>
                           <strong>Date de fin :</strong> ${reservationData.serviceDates.endDate}<br><br> Merci pour votre confiance.<br><br> Cordialement,<br> L'équipe Sahel
                         </div>
                       </td>

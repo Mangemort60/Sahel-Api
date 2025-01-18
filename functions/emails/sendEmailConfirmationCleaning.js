@@ -165,7 +165,7 @@ const sendEmailConfirmationCleaning = functions.firestore
                     </tr>
                     <tr>
                       <td align="left" style="font-size:0px;padding:10px;word-break:break-word;">
-                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1.5;text-align:left;color:#666666;">Bonjour ${reservationData.firstName},<br /> Merci pour votre réservation avec Sahel ! <br /> Votre réservation pour le <strong>${reservationData.serviceDate}</strong> a été confirmée.</div>
+                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1.5;text-align:left;color:#666666;">Bonjour ${reservationData.firstName},<br /> Merci pour votre réservation avec Sahel ! <br /> Votre réservation pour le <strong>${reservationData.serviceStartDate}</strong> a été confirmée.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -1185,7 +1185,7 @@ const sendEmailConfirmationCleaning = functions.firestore
                   <tbody>
                     <tr>
                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:left;color:#666666;">Bonjour ${reservationData.firstName},<br /> Nous avons bien pris en compte votre réservation pour une prestation de ménage le ${reservationData.serviceDate}. <br/> Afin que celle-ci se déroule dans les meilleures conditions, veuillez lire attentivement les instructions ci-dessous.</div>
+                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:left;color:#666666;">Bonjour ${reservationData.firstName},<br /> Nous avons bien pris en compte votre réservation pour une prestation de ménage le ${reservationData.serviceStartDate}. <br/> Afin que celle-ci se déroule dans les meilleures conditions, veuillez lire attentivement les instructions ci-dessous.</div>
                       </td>
                     </tr>
                   </tbody>

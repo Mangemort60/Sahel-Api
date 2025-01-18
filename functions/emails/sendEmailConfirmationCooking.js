@@ -162,7 +162,7 @@ const sendEmailConfirmationCooking = functions.firestore
                     </tr>
                     <tr>
                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:left;color:#666666;">Bonjour ${reservationData.firstName},<br /> Merci pour votre réservation avec Sahel !<br /> Votre prestation de <strong>cuisine</strong> prévue le <strong>${reservationData.serviceDate}</strong> a été confirmée.</div>
+                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:left;color:#666666;">Bonjour ${reservationData.firstName},<br /> Merci pour votre réservation avec Sahel !<br /> Votre prestation de <strong>cuisine</strong> prévue le <strong>${reservationData.serviceStartDate}</strong> a été confirmée.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -192,7 +192,7 @@ const sendEmailConfirmationCooking = functions.firestore
                     <tr>
                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                         <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:left;color:#666666;"><strong>Lieu de la prestation :</strong> ${reservationData.address}<br />
-                          <strong>Date :</strong> ${reservationData.serviceDate}<br />
+                          <strong>Date :</strong> ${reservationData.serviceStartDate}<br />
                           <strong>Période :</strong> ${reservationData.period}<br />
                           <strong>Nombre de personnes :</strong> ${reservationData.numberOfPeople}<br />
                         </div>

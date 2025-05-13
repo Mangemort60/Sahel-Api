@@ -24,7 +24,7 @@ app.use(
       "https://sahel-admin.web.app",
       "https://sahel-26e16.firebaseapp.com",
       "https://sahel-admin.firebaseapp.com",
-      "https://sahel-services.com/",
+      "https://sahel-services.com",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],

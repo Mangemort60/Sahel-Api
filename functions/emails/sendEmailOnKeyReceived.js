@@ -16,14 +16,17 @@ const sendEmailOnKeyReceived = functions.firestore
       const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
       // Paramètres de l'email
-      sendSmtpEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+      sendSmtpEmail.sender = {
+        email: "contact@sahel-services.com",
+        name: "Sahel",
+      };
       sendSmtpEmail.to = [{ email: newValue.email }];
       sendSmtpEmail.subject = "Confirmation de Réception des Clés";
       sendSmtpEmail.htmlContent = `<!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
-  <title> Confirmation de Réception des Clés </title>
+  <title> Confirmation de réception des clés  </title>
   <!--[if !mso]><!-->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!--<![endif]-->
@@ -108,25 +111,18 @@ const sendEmailOnKeyReceived = functions.firestore
       }
     }
   </style>
-  <style type="text/css">
-    .content-container {
-      background-color: #f5f5f5;
-      border-radius: 8px;
-      padding: 20px;
-    }
-  </style>
 </head>
 
 <body style="word-spacing:normal;background-color:#ffffff;">
-  <div style="display:none;font-size:1px;color:#ffffff;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;"> Confirmation de réception des clés </div>
   <div style="background-color:#ffffff;">
+    <!-- Logo Section -->
     <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     <div style="margin:0px auto;max-width:600px;">
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
         <tbody>
           <tr>
-            <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
-              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
+            <td style="direction:ltr;font-size:0px;padding:20px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:560px;" ><![endif]-->
               <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                   <tbody>
@@ -135,8 +131,8 @@ const sendEmailOnKeyReceived = functions.firestore
                         <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="border-collapse:collapse;border-spacing:0px;">
                           <tbody>
                             <tr>
-                              <td style="width:200px;">
-                                <img alt="Sahel Logo" height="auto" src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2FLogo-2-copie.png?alt=media&token=da1022cf-4416-4e78-8318-f053c25ee650" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="200" />
+                              <td style="width:150px;">
+                                <img alt="Sahel logo" height="auto" src="https://firebasestorage.googleapis.com/v0/b/sahel-26e16.appspot.com/o/Logo%20Sahel%2FLogo-2-copie.png?alt=media&token=da1022cf-4416-4e78-8318-f053c25ee650" style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;" width="150" />
                               </td>
                             </tr>
                           </tbody>
@@ -152,43 +148,41 @@ const sendEmailOnKeyReceived = functions.firestore
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-    <div style="margin:0px auto;max-width:600px;">
-      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+    <!-- Content Box -->
+    <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" bgcolor="#f5f4f5" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="background:#f5f4f5;background-color:#f5f4f5;margin:0px auto;border-radius:8px;max-width:600px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#f5f4f5;background-color:#f5f4f5;width:100%;border-radius:8px;">
         <tbody>
           <tr>
-            <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
-              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
-              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
-                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
-                  <tbody>
-                    <tr>
-                      <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:24px;font-weight:bold;line-height:1;text-align:center;color:#1d1c1d;">Confirmation de Réception des Clés</div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="content-container-outlook" style="width:600px;" width="600" bgcolor="#f5f5f5" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-    <div class="content-container" style="background:#f5f5f5;background-color:#f5f5f5;margin:0px auto;max-width:600px;">
-      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#f5f5f5;background-color:#f5f5f5;width:100%;">
-        <tbody>
-          <tr>
-            <td style="direction:ltr;font-size:0px;padding:20px;text-align:center;">
+            <td style="direction:ltr;font-size:0px;padding:0 20px;text-align:center;">
               <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:560px;" ><![endif]-->
               <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                   <tbody>
                     <tr>
-                      <td align="left" style="font-size:0px;padding:20px;word-break:break-word;">
-                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1.5;text-align:left;color:#666666;">Bonjour ${newValue.firstName}, <br /><br /> Nous vous confirmons la bonne réception de vos clés pour votre prestation de <strong>${newValue.reservationType}</strong>.<br /><br /> Nous nous assurerons que vos clés sont conservées en toute sécurité jusqu'à la date de la prestation. N'hésitez pas à nous contacter si vous avez des questions ou des instructions supplémentaires. <br /><br /> Cordialement, <br /> L'équipe Sahel</div>
+                      <td align="center" style="font-size:0px;padding:20px 0;word-break:break-word;">
+                        <div style="font-family:Ubuntu, Arial, sans-serif;font-size:28px;font-weight:bold;line-height:1;text-align:center;color:#333333;">Confirmation de réception des clés </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:10px 20px;word-break:break-word;">
+                        <div style="font-family:Ubuntu, Arial, sans-serif;font-size:16px;line-height:1.5;text-align:left;color:#666666;">Bonjour ${newValue.firstName},</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:10px 20px;word-break:break-word;">
+                        <div style="font-family:Ubuntu, Arial, sans-serif;font-size:16px;line-height:1.5;text-align:left;color:#666666;">Nous vous confirmons la bonne réception de vos clés pour votre prestation de <strong>${newValue.reservationType}</strong>.</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:10px 20px;word-break:break-word;">
+                        <div style="font-family:Ubuntu, Arial, sans-serif;font-size:16px;line-height:1.5;text-align:left;color:#666666;">Nous nous assurerons que vos clés sont conservées en toute sécurité jusqu'à la date de la prestation. N'hésitez pas à nous contacter si vous avez des questions ou des instructions supplémentaires.</div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="font-size:0px;padding:10px 20px;word-break:break-word;">
+                        <div style="font-family:Ubuntu, Arial, sans-serif;font-size:16px;line-height:1.5;text-align:left;color:#666666;">Cordialement,<br /> L'équipe Sahel</div>
                       </td>
                     </tr>
                   </tbody>
@@ -200,13 +194,15 @@ const sendEmailOnKeyReceived = functions.firestore
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <!--[if mso | IE]></td></tr></table><![endif]-->
+    <!-- Social Media Section -->
+    <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" style="width:600px;" width="600" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     <div style="margin:0px auto;max-width:600px;">
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
         <tbody>
           <tr>
-            <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
-              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:600px;" ><![endif]-->
+            <td style="direction:ltr;font-size:0px;padding:20px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td align="center" class="" style="vertical-align:top;width:560px;" ><![endif]-->
               <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                   <tbody>
@@ -219,7 +215,7 @@ const sendEmailOnKeyReceived = functions.firestore
                               <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#3b5998;border-radius:3px;width:30px;">
                                 <tr>
                                   <td style="font-size:0;height:30px;vertical-align:middle;width:30px;">
-                                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.facebook.com/sharer/sharer.php?u=https://mjml.io/" target="_blank">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.facebook.com/" target="_blank">
                                       <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/facebook.png" style="border-radius:3px;display:block;" width="30" />
                                     </a>
                                   </td>
@@ -235,7 +231,7 @@ const sendEmailOnKeyReceived = functions.firestore
                               <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#0077b5;border-radius:3px;width:30px;">
                                 <tr>
                                   <td style="font-size:0;height:30px;vertical-align:middle;width:30px;">
-                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.linkedin.com/shareArticle?mini=true&url=https://linkedin.com&title=&summary=&source=" target="_blank">
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=https://www.linkedin.com/&title=&summary=&source=" target="_blank">
                                       <img height="30" src="https://www.mailjet.com/images/theme/v1/icons/ico-social/linkedin.png" style="border-radius:3px;display:block;" width="30" />
                                     </a>
                                   </td>

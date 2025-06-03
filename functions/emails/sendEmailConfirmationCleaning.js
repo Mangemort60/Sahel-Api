@@ -15,28 +15,31 @@ apiKey.apiKey = process.env.SENDINBLUE_KEY || functions.config().sendinblue.key;
 
 const sendEmailConfirmationCleaning = functions.firestore
   .document("reservations/{reservationId}")
-  .onCreate(async (snap, context) => {
-    const reservationData = snap.data();
+  .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
     const reservationId = context.params.reservationId;
 
-    // Vérifier si le type de réservation est "ménage"
-    if (reservationData.reservationType !== "ménage") {
-      console.log(
-        `Reservation type is not "ménage" for reservationId: ${reservationId}, skipping email.`
-      );
-      return;
-    }
+    // Ne traiter que les réservations de type "ménage"
+    if (after.reservationType !== "ménage") return;
 
-    console.log(`Function triggered for reservationId: ${reservationId}`);
-    console.log("RESERVATION EMAIL", reservationData.email);
+    // Détecter le passage de "en attente" à "confirmé"
+    const statusChangedToConfirmed =
+      before.bookingStatus === "en attente" &&
+      after.bookingStatus === "confirmé";
 
+    if (!statusChangedToConfirmed) return;
+
+    const reservationData = after;
     const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-
     // Envoyer l'email de confirmation si pas déjà envoyé
     if (!reservationData.emails.confirmationEmailSent) {
       console.log("reservation email :", reservationData.email);
       const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendSmtpEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+      sendSmtpEmail.sender = {
+        email: "contact@sahel-services.com",
+        name: "Sahel",
+      };
       sendSmtpEmail.to = [{ email: reservationData.email }];
       sendSmtpEmail.subject = "Confirmation de votre réservation";
       sendSmtpEmail.htmlContent = `<!doctype html>
@@ -306,7 +309,10 @@ const sendEmailConfirmationCleaning = functions.firestore
       !reservationData.emails.instructionsKeysEmailSent
     ) {
       const sendKeysEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendKeysEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+      sendKeysEmail.sender = {
+        email: "contact@sahel-services.com",
+        name: "Sahel",
+      };
       sendKeysEmail.to = [{ email: reservationData.email }];
       sendKeysEmail.subject = "Instructions pour la remise des clés";
       sendKeysEmail.htmlContent = `<!doctype html>
@@ -1012,7 +1018,7 @@ const sendEmailConfirmationCleaning = functions.firestore
     ) {
       const sendDefaultInstructionsEmail = new SibApiV3Sdk.SendSmtpEmail();
       sendDefaultInstructionsEmail.sender = {
-        email: "hahaddaoui@gmail.com",
+        email: "contact@sahel-services.com",
         name: "Sahel",
       };
       sendDefaultInstructionsEmail.to = [{ email: reservationData.email }];

@@ -23,7 +23,10 @@ const sendEmailServiceInProgress = functions.firestore
       const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
       const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendSmtpEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+      sendSmtpEmail.sender = {
+        email: "contact@sahel-services.com",
+        name: "Sahel",
+      };
       sendSmtpEmail.to = [{ email: reservationData.email }]; // Assurez-vous que l'email du client est bien stocké dans reservationData
       sendSmtpEmail.subject = "Votre prestation est en cours";
       sendSmtpEmail.htmlContent = `<!doctype html>

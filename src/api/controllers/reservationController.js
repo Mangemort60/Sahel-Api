@@ -58,7 +58,8 @@ const getReservedDates = async (req, res) => {
 const getReservationsByUser = async (req, res) => {
   try {
     const shortID = req.query.shortID;
-    const reservationType = req.query.reservationType || ""; // Optionnel, par défaut vide
+    const reservationType = req.query.reservationType || "";
+
     console.log(
       "Requête reçue pour shortID:",
       shortID,
@@ -74,7 +75,6 @@ const getReservationsByUser = async (req, res) => {
       .collection("reservations")
       .where("shortId", "==", shortID);
 
-    // Si un type de réservation est fourni, appliquer le filtre
     if (reservationType) {
       queryRef = queryRef.where("reservationType", "==", reservationType);
     }
@@ -82,33 +82,15 @@ const getReservationsByUser = async (req, res) => {
     const snapshot = await queryRef.get();
 
     if (snapshot.empty) {
-      // Retourner un tableau vide au lieu d'un 404
       return res.status(200).json([]);
     }
 
-    const reservations = await Promise.all(
-      snapshot.docs.map(async (doc) => {
-        const reservation = { id: doc.id, ...doc.data() };
+    // Pas de traitement spécial du champ devis ici : il est inclus directement
+    const reservations = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
 
-        // Récupérer la sous-collection 'devis' pour cette réservation
-        const devisCollectionRef = db
-          .collection("reservations")
-          .doc(doc.id)
-          .collection("devis");
-
-        const devisSnapshot = await devisCollectionRef.get();
-
-        // Ajouter les devis à l'objet réservation
-        reservation.devis = devisSnapshot.docs.map((devisDoc) => ({
-          id: devisDoc.id,
-          ...devisDoc.data(),
-        }));
-
-        return reservation;
-      })
-    );
-
-    // Renvoyer les réservations au frontend
     res.status(200).json(reservations);
   } catch (error) {
     console.error("Erreur lors de la récupération des réservations:", error);

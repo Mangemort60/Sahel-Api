@@ -18,7 +18,10 @@ const sendEmailEstimateReadyForPayment = functions.firestore
     const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
-    sendSmtpEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+    sendSmtpEmail.sender = {
+      email: "contact@sahel-services.com",
+      name: "Sahel",
+    };
     sendSmtpEmail.to = [{ email: clientEmail }];
     sendSmtpEmail.subject = "Votre devis est prêt pour paiement";
     sendSmtpEmail.htmlContent = `<!doctype html>

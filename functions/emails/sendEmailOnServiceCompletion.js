@@ -13,13 +13,16 @@ const sendEmailOnServiceCompletion = functions.firestore
 
     // Check if the serviceStatus changed to "terminé"
     if (
-      previousValue.serviceStatus !== "terminé" &&
-      newValue.serviceStatus === "terminé"
+      previousValue.bookingStatus !== "terminé" &&
+      newValue.bookingStatus === "terminé"
     ) {
       const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
       const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
-      sendSmtpEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+      sendSmtpEmail.sender = {
+        email: "contact@sahel-services.com",
+        name: "Sahel",
+      };
       sendSmtpEmail.to = [{ email: newValue.email }];
       sendSmtpEmail.subject = "Prestation terminée";
       sendSmtpEmail.htmlContent = `<!doctype html>

@@ -15,7 +15,7 @@ const sendConfirmationAndInstructionsEmails = functions.firestore
     const reservationId = context.params.reservationId;
 
     if (
-      reservationData.paymentStatus === "frais de service payés" &&
+      reservationData.serviceFeeInfo.paid &&
       reservationData.reservationType === "petits-travaux"
     ) {
       const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
@@ -28,7 +28,7 @@ const sendConfirmationAndInstructionsEmails = functions.firestore
 
       const sendConfirmationEmail = new SibApiV3Sdk.SendSmtpEmail();
       sendConfirmationEmail.sender = {
-        email: "hahaddaoui@gmail.com",
+        email: "contact@sahel-services.com",
         name: "Sahel",
       };
       sendConfirmationEmail.to = [{ email: reservationData.email }];
@@ -235,7 +235,10 @@ const sendConfirmationAndInstructionsEmails = functions.firestore
 </html>`;
 
       const sendKeysEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendKeysEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+      sendKeysEmail.sender = {
+        email: "contact@sahel-services.com",
+        name: "Sahel",
+      };
       sendKeysEmail.to = [{ email: reservationData.email }];
       sendKeysEmail.subject = "Instructions pour la remise des clés";
       sendKeysEmail.htmlContent = `<!doctype html>

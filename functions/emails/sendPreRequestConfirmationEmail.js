@@ -33,7 +33,10 @@ const sendEmailPreRequestConfirmation = functions.firestore
       !reservationData.emails.preRequestEmailSent
     ) {
       const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendSmtpEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+      sendSmtpEmail.sender = {
+        email: "contact@sahel-services.com",
+        name: "Sahel",
+      };
       sendSmtpEmail.to = [{ email: reservationData.email }];
       sendSmtpEmail.subject =
         "Confirmation de votre pré-demande pour petits travaux";

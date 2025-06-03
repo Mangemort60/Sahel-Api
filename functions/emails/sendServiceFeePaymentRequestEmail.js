@@ -13,7 +13,7 @@ const sendServiceFeePaymentRequestEmail = functions.firestore
     const reservationId = context.params.reservationId;
 
     // Vérifiez si l'email a déjà été envoyé en utilisant le champ `serviceFeeEmailSent`
-    if (reservationData.serviceFeeEmailSent) {
+    if (reservationData.emails.serviceFeeEmailSent) {
       console.log(
         `Service fee payment request email already sent for reservationId: ${reservationId}`
       );
@@ -23,15 +23,16 @@ const sendServiceFeePaymentRequestEmail = functions.firestore
     // Vérifier si le bookingStatus et paymentStatus sont corrects
     if (
       reservationData.bookingStatus === "confirmé" &&
-      reservationData.paymentStatus ===
-        "en attente de paiement des frais de service" &&
       reservationData.reservationType === "petits-travaux"
     ) {
       console.log(`Function triggered for reservationId: ${reservationId}`);
 
       const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
       const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendSmtpEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+      sendSmtpEmail.sender = {
+        email: "contact@sahel-services.com",
+        name: "Sahel",
+      };
       sendSmtpEmail.to = [{ email: reservationData.email }];
       sendSmtpEmail.subject =
         "Action requise : Paiement des frais de service requis pour commencer le processus";
@@ -296,7 +297,7 @@ const sendServiceFeePaymentRequestEmail = functions.firestore
 
         // Mettre à jour le champ pour marquer l'email comme envoyé
         await change.after.ref.update({
-          serviceFeeEmailSent: true,
+          "emails.serviceFeeEmailSent": true,
         });
       } catch (error) {
         console.error(

@@ -28,7 +28,10 @@ const sendEmailServiceDatesDefined = functions.firestore
       const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
       const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendSmtpEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+      sendSmtpEmail.sender = {
+        email: "contact@sahel-services.com",
+        name: "Sahel",
+      };
       sendSmtpEmail.to = [{ email: reservationData.email }]; // Assurez-vous que l'email du client est dans reservationData
       sendSmtpEmail.subject = "Votre créneau est défini";
       sendSmtpEmail.htmlContent = `<!doctype html>
@@ -270,7 +273,7 @@ const sendEmailServiceDatesDefined = functions.firestore
                     </tr>
                     <tr>
                       <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:12px;line-height:1;text-align:center;color:#999999;">Sahel, votre partenaire de confiance. Contactez-nous à <a href="mailto:hahaddaoui@gmail.com" style="color: #0056b3;">hahaddaoui@gmail.com</a>.</div>
+                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:12px;line-height:1;text-align:center;color:#999999;">Sahel, votre partenaire de confiance. Contactez-nous à <a href="mailto:contact@sahel-services.com" style="color: #0056b3;">contact@sahel-services.com</a>.</div>
                       </td>
                     </tr>
                   </tbody>

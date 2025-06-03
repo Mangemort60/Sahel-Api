@@ -28,7 +28,10 @@ const sendEmailOnNewAdminMessage = functions.firestore
       const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
       // Informations pour l'email
-      sendSmtpEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+      sendSmtpEmail.sender = {
+        email: "contact@sahel-services.com",
+        name: "Sahel",
+      };
       sendSmtpEmail.to = [{ email: reservationData.email }]; // Assurez-vous que l'email du client est bien stocké dans reservationData
       sendSmtpEmail.subject = "Nouveau message dans votre espace client";
       sendSmtpEmail.htmlContent = `<!doctype html>

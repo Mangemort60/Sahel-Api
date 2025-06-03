@@ -113,7 +113,10 @@ const resetPassword = async (req, res) => {
 
     // Configuration de l'email à envoyer
     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-    sendSmtpEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+    sendSmtpEmail.sender = {
+      email: "contact@sahel-services.com",
+      name: "Sahel",
+    };
     sendSmtpEmail.to = [{ email }];
     sendSmtpEmail.subject = "Réinitialisation de votre mot de passe";
     sendSmtpEmail.htmlContent = `<!doctype html>

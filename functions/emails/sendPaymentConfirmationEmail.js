@@ -7,16 +7,21 @@ const apiKey = client.authentications["api-key"];
 apiKey.apiKey = process.env.SENDINBLUE_KEY || functions.config().sendinblue.key;
 
 const sendEmailConfirmationPayment = functions.firestore
-  .document("reservations/{reservationId}/devis/{devisId}")
+  .document("reservations/{reservationId}")
   .onUpdate(async (change, context) => {
-    const devisData = change.after.data();
+    const after = change.after.data();
     const reservationId = context.params.reservationId;
+    const before = change.before.data();
 
-    // Check if the paymentStatus has changed to "payé"
+    // Ne rien faire si le statut de paiement n'a pas changé ou si ce n'est pas "payé"
     if (
-      devisData.paymentStatus === "payé" &&
-      change.before.data().paymentStatus !== "payé"
+      before.paymentStatus === after.paymentStatus ||
+      (before.paymentStatus !== "payé" && after.paymentStatus !== "payé")
     ) {
+      console.log("Pas de changement vers 'payé', fonction ignorée.");
+      return null;
+    }
+    {
       try {
         // Retrieve the parent reservation document to get the firstName
         const reservationRef = admin
@@ -34,13 +39,12 @@ const sendEmailConfirmationPayment = functions.firestore
 
         const reservationData = reservationDoc.data();
         const firstName = reservationData.firstName;
-        const amount = devisData.amount;
 
         const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
         const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
         sendSmtpEmail.sender = {
-          email: "hahaddaoui@gmail.com",
+          email: "contact@sahel-services.com",
           name: "Sahel",
         };
         sendSmtpEmail.to = [{ email: reservationData.email }];
@@ -214,7 +218,7 @@ Bonjour ${firstName},</div>
                     </tr>
                     <tr>
                       <td align="left" style="font-size:0px;padding:10px 20px;word-break:break-word;">
-                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:left;color:#666666;">Nous vous confirmons la réception de votre paiement pour le devis relatif à vos travaux d'un montant de <strong>${amount}€</strong>.Les travaux seront bientôt lancés.</div>
+                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:left;color:#666666;">Nous vous confirmons la réception de votre paiement.Les travaux seront bientôt lancés.</div>
                       </td>
                     </tr>
                     <tr>
@@ -252,9 +256,7 @@ Merci de votre confiance,
 </html>`;
 
         await apiInstance.sendTransacEmail(sendSmtpEmail);
-        console.log(
-          `Confirmation email sent successfully for payment of ${amount} € to ${reservationData.email}`
-        );
+        console.log(`Confirmation email sent successfully for payment.`);
       } catch (error) {
         console.error("Failed to send payment confirmation email:", error);
       }

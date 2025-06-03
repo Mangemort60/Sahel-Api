@@ -12,31 +12,33 @@ apiKey.apiKey = process.env.SENDINBLUE_KEY || functions.config().sendinblue.key;
 
 const sendEmailConfirmationCooking = functions.firestore
   .document("reservations/{reservationId}")
-  .onCreate(async (snap, context) => {
-    const reservationData = snap.data();
+  .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
     const reservationId = context.params.reservationId;
 
-    // Vérifier si le type de réservation est "cuisine"
-    if (reservationData.reservationType !== "cuisine") {
-      console.log(
-        `Reservation type is not "cuisine" for reservationId: ${reservationId}, skipping email.`
-      );
-      return;
-    }
+    // Ne traiter que les réservations de type "ménage"
+    if (after.reservationType !== "cuisine") return;
 
-    console.log(`Function triggered for reservationId: ${reservationId}`);
-    console.log("RESERVATION EMAIL", reservationData.email);
+    // Détecter le passage de "en attente" à "confirmé"
+    const statusChangedToConfirmed =
+      before.bookingStatus === "en attente" &&
+      after.bookingStatus === "confirmé";
 
+    if (!statusChangedToConfirmed) return;
+
+    const reservationData = after;
     const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-
     // Envoyer l'email de confirmation si pas déjà envoyé
     if (!reservationData.emails.confirmationEmailSent) {
       console.log("reservation email :", reservationData.email);
       const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
-      sendSmtpEmail.sender = { email: "hahaddaoui@gmail.com", name: "Sahel" };
+      sendSmtpEmail.sender = {
+        email: "contact@sahel-services.com",
+        name: "Sahel",
+      };
       sendSmtpEmail.to = [{ email: reservationData.email }];
-      sendSmtpEmail.subject =
-        "Confirmation de votre réservation pour le service de cuisine";
+      sendSmtpEmail.subject = "Confirmation de votre réservation";
       sendSmtpEmail.htmlContent = `<!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 
@@ -162,7 +164,7 @@ const sendEmailConfirmationCooking = functions.firestore
                     </tr>
                     <tr>
                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:left;color:#666666;">Bonjour ${reservationData.firstName},<br /> Merci pour votre réservation avec Sahel !<br /> Votre prestation de <strong>cuisine</strong> prévue le <strong>${reservationData.serviceStartDate}</strong> a été confirmée.</div>
+                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:left;color:#666666;">Bonjour ${after.firstName},<br /> Merci pour votre réservation avec Sahel !<br /> Votre prestation de <strong>cuisine</strong> prévue le <strong>${after.serviceStartDate}</strong> a été confirmée.</div>
                       </td>
                     </tr>
                   </tbody>
@@ -191,10 +193,10 @@ const sendEmailConfirmationCooking = functions.firestore
                     </tr>
                     <tr>
                       <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:left;color:#666666;"><strong>Lieu de la prestation :</strong> ${reservationData.address}<br />
-                          <strong>Date :</strong> ${reservationData.serviceStartDate}<br />
-                          <strong>Période :</strong> ${reservationData.period}<br />
-                          <strong>Nombre de personnes :</strong> ${reservationData.numberOfPeople}<br />
+                        <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:16px;line-height:1;text-align:left;color:#666666;"><strong>Lieu de la prestation :</strong> ${after.address}<br />
+                          <strong>Date :</strong> ${after.serviceStartDate}<br />
+                          <strong>Période :</strong> ${after.period}<br />
+                          <strong>Nombre de personnes :</strong> ${after.numberOfPeople}<br />
                         </div>
                       </td>
                     </tr>
@@ -268,13 +270,11 @@ const sendEmailConfirmationCooking = functions.firestore
 </body>
 
 </html>`;
-
       try {
         console.log(`Sending confirmation email to: ${reservationData.email}`);
         await apiInstance.sendTransacEmail(sendSmtpEmail);
         console.log("Confirmation email sent successfully");
 
-        // Mettre à jour le document pour marquer l'email de confirmation comme envoyé
         await admin
           .firestore()
           .collection("reservations")
